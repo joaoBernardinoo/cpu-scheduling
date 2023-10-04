@@ -50,8 +50,8 @@ class Scheduler {
                     .shift();
                 break;
         }
-        
-        if (process) {process.color = "aqua"; process.count++;};
+
+        if (process) {process.color = "aqua"};
 
         return process;
     }

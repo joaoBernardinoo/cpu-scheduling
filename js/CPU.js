@@ -148,7 +148,6 @@ class Process {
         this.burst = burst;
         this.color = color;
         this.label = label;
-        this.count = 0;
         this.scheduled = false;
     }
 }
