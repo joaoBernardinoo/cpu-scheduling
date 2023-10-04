@@ -1,12 +1,10 @@
 class Scheduler {
-    constructor(criteria = "RR") {
+    constructor(criteria = "EDF") {
         this.criteria = criteria;
         // Sobrecarga e Quantum
-        this.overload = 1; // o usuário deve alterar se quiser
         this.quantum = 2;
         // Contadores dos processos
-        this.overloadCount = 0;
-        this.quantumCounter = 0;
+        this.quantumCount = 0;
         // Filas dos processos
         this.ready = [];
         this.suspended = [];
@@ -15,13 +13,12 @@ class Scheduler {
 
     // Mostra o estado atual do escalonador
     status(sync) {
-        console.log(`Scheduler: ${this.ready.map((p) => p.pid)}   t${sync}`);
+        console.log(`Ready Queue: ${this.ready.map((p) => p.pid)} quantum: ${this.quantumCount}  t${sync}`);
     }
 
     // Adiciona o processo da fila de prontos
     addProcess(process) {
         // Azul é espera
-        process.color = "yellow";
         this.ready.push(process);
     }
 
@@ -36,7 +33,7 @@ class Scheduler {
                 break;
             case "SJF":
                 process = this.ready
-                    .sort((a, b) => a.duration - b.duration)
+                    .sort((a, b) => a.burst - b.burst)
                     .shift();
                 break;
             case "RR":
@@ -49,24 +46,14 @@ class Scheduler {
                 break;
             case "EDF":
                 process = this.ready
-                    .sort((a, b) => a.deadline - b.deadline)
+                    .sort((a, b) => b.deadline - a.deadline)
                     .shift();
                 break;
         }
-
-        if (process) process.color = "aqua";
+        
+        if (process) {process.color = "aqua"; process.count++;};
 
         return process;
     }
     
-    // Lida com a sobrecarga do escalonador
-    isOverloading() {
-        if (this.overloadCount == this.overload) {
-            this.overloadCount = 0;
-            console.log("CPU Overload ");
-            return false;
-        }
-        this.overloadCount++;
-        return true;
-    }
 }

@@ -1,9 +1,16 @@
+const RESET_COLOR = "\x1b[0m"; // Código de escape para redefinir a cor ao padrão
+const RED_TEXT = "\x1b[31m"; // Código de escape para texto vermelho
+
 class CPU {
     // Unidade de Processamento Principal
-    constructor() {
+    constructor(criteria) {
         this.process = null;
-        this.scheduler = new Scheduler();
+        this.scheduler = new Scheduler(criteria);
         this.sync = 0;
+        this.idle = 0;
+        this.overheadTime = 1;
+        this.overheadCount = this.overheadTime;
+        this.flag = false;
     }
 
     // Mostra o estado atual do processador
@@ -20,6 +27,7 @@ class CPU {
     // Executa o processo
     execute() {
         this.process.burst--;
+        this.scheduler.quantumCount++;
     }
 
     // Verifica se o processo acabou
@@ -40,68 +48,88 @@ class CPU {
     // Requisita o processo ao escalonador
     requestProcess() {
         this.process = this.scheduler.fetchProcess();
+        this.idle = 0;
     }
 
-    // Lida com a sobrecarga do processador
-    overload() {
-        if (this.scheduler.criteria in ["RR", "EDF"] && this.isOverloading()) {
+    // Verifica se há sobrecarga
+    isOverhead() {
+        return this.overheadCount < this.overheadTime;
+    }
+
+    // Lida com a sobrecarga
+    handleOverhead() {
+        if (this.flag && !this.isOverhead()) {
+            this.process.color = "yellow";
+            this.requestProcess();
+            this.flag = false;
+        }
+    }
+    // Lida com o quantum excedido
+    handleQuantumExceeded() {
+        if (
+            (this.scheduler.criteria == "RR" ||
+                this.scheduler.criteria == "PRIORITY" ||
+                this.scheduler.criteria == "EDF") &&
+            this.scheduler.quantumCount == this.scheduler.quantum
+        ) {
+            this.scheduler.quantumCount = 0;
+            this.overheadCount = 0;
+            this.flag = true;
             this.process.color = "red";
+            this.scheduler.ready.push(this.process);
+            console.log("Quantum expired!", this.process.pid);
+            this.handleOverhead();
             return true;
         }
     }
 
     // Envia o processo para a lista de processos finalizados
     completeProcess() {
-        // Marca vermelho onde está havendo sobrecarga
-        if (this.overload()) return;
+        this.scheduler.quantumCount = 0;
+
         console.log("Process finished!");
-        // Caso contrário marca o processo como finalizado
         this.process.color = "white";
         this.scheduler.finished.push(this.process);
         this.process = null;
-    }
 
-    // Verifica se está havendo sobrecarga
-    isOverloading() {
-        return this.scheduler.isOverloading();
-    }
-
-    // Verifica se atingiu o quantum
-    hasReachedQuantum() {
-        return this.scheduler.quantumCounter >= this.scheduler.quantum == 0;
-    }
-
-    handleQuantumOverflow() {
-        if (this.hasReachedQuantum()) {
-            if (this.overload()) return;
-            this.scheduler.quantumCounter = 0;
-            this.scheduler.ready.push(this.process);
-            this.process = null;
-            this.requestProcess();
-        }
-        this.scheduler.quantumCounter++;
+        // Aqui falta calcular o Turn Around do Processo
+        // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
     }
 
     // Processador entra em execução
-    run(delay = 1000) {
+    run(stackedBar, process, delay = 1000) {
+        const exec = this.process ? this.process.pid : "none";
+        console.log(`Starting Process: ${exec} `);
+        this.status();
         if (!this.isReady()) {
             this.requestProcess();
-            return;
+            console.log("Requesting process...", this.process.pid);
         }
+
+        // Verifica se há sobrecarga
+        if (this.isOverhead()) {
+            console.log(RED_TEXT + "Overhead!" + RESET_COLOR);
+            this.overheadCount++;
+        }
+
+        // Verifica se a sobrecarga acabou
+        this.handleOverhead();
 
         // Decrementa o tempo de execução do processo
-        if (!this.isFinished()) {
+        interrupt: if (!this.isFinished()) {
+            console.log("Proceed:", this.process.pid);
+            if (this.handleQuantumExceeded()) break interrupt;
+
+            console.log("Executing process...");
             this.execute();
         }
-        
-        // Verifica se o processo acabou
-        if (this.isFinished()) {
-            this.completeProcess();
-            this.requestProcess();
-        }
-
-        // Atualiza o estado do processador
         this.status();
+        updateChart(stackedBar, process, this.sync);
+        // Verifica se o processo acabou
+        if (this.process && this.isFinished()) {
+            this.completeProcess();
+        }
+        // Atualiza o estado do processador
     }
 }
 
@@ -120,5 +148,7 @@ class Process {
         this.burst = burst;
         this.color = color;
         this.label = label;
+        this.count = 0;
+        this.scheduled = false;
     }
 }

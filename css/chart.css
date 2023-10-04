@@ -14,8 +14,14 @@
 }
 
 .chartBox {
-    width: 90vw;
+    
+    width: 46vw;
     border: 1px solid #000;
     border-radius: 10px;
     border-width: 4px;
+}
+
+.chartCointainer {
+    display: flex;
+    flex-wrap: wrap;
 }
