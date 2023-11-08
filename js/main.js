@@ -51,10 +51,8 @@ function update(stackedBar, process, cpu, delay = 1000) {
     setTimeout(() => update(stackedBar, process, cpu, delay), delay);
 }
 
-const processList = [];
-const cpus = [new CPU("FCFS"), new CPU("RR"), new CPU("SJF"), new CPU("EDF")];
-
-for (let i = 0; i < 4; i++) {
-    processList.push(JSON.parse(JSON.stringify(process)));
-    update(stackedBars[i], processList[i], cpus[i])
+function main() {
+    const cpu = new CPU();
+    update(stackedBar1, process, cpu);
 }
+main();
