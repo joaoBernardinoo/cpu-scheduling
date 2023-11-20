@@ -133,21 +133,3 @@ class CPU {
     }
 }
 
-class Process {
-    // Processo com tempo de chegada, tempo de execução, prioridade e deadline
-    constructor({
-        pid = "00000",
-        arrival = 0,
-        burst = 99,
-        color = "white",
-        label = "",
-        // falta deadline e prioridade
-    }) {
-        this.pid = pid;
-        this.arrival = arrival;
-        this.burst = burst;
-        this.color = color;
-        this.label = label;
-        this.scheduled = false;
-    }
-}
