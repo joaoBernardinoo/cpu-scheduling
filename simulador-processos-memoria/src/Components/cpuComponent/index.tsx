@@ -2,10 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 
 import CPU from '@/scripts/cpu';
-import Process from '@/scripts/process';
 
 import Modal from '@/Components/Modal';
-
+import ProcessManager from '../ProcessManager';
 
 export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -21,6 +20,8 @@ export default function CpuComponent() {
       <div>
         <button onClick={() => setModalIsOpen(true)}>Adicionar processo</button>
       </div>
+      <ProcessManager scheduler={cpu[0].scheduler}/>
+
       <Modal isOpen={modalIsOpen} setOpenModal={() => setModalIsOpen(!modalIsOpen)} cpu={cpu[0]}/>
     </div>
   )
