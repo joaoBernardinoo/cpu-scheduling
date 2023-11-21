@@ -25,7 +25,6 @@ export default function Modal({isOpen, setOpenModal, cpu}: {isOpen: boolean, set
         });
         setCounter(counter + 1);
         cpu.scheduler.addProcess(newProcess);
-        console.log(cpu.scheduler);
         setOpenModal();
     }
 
@@ -50,6 +49,7 @@ export default function Modal({isOpen, setOpenModal, cpu}: {isOpen: boolean, set
                     </select>
                     <input type='submit'/>
                 </form>
+                <button onClick={setOpenModal}>Fechar</button>
             </Container>
         </Background>
     )
