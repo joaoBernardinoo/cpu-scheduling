@@ -8,15 +8,22 @@ import ProcessManager from '../ProcessManager';
 
 export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [processes, setProcesses] = useState<string[][]>([]);
 
   const cpu = useState<CPU>(new CPU('FCFS'));
 
+  function handleExec() {
+    cpu[0].run();
+    const states = cpu[0].getStates();
+    processes.push(states);
+    console.log(processes)
+  }    
 
 
   return (
     <div>
       <h1>CPU</h1>
-      <button onClick={() => cpu[0].run()}>Run</button>
+      <button onClick={() => handleExec()}>Run</button>
       <div>
         <button onClick={() => setModalIsOpen(true)}>Adicionar processo</button>
       </div>

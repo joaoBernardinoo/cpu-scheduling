@@ -105,6 +105,17 @@ export default class CPU {
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
   }
 
+  getStates() {
+    const tasks = [
+      ...this.scheduler.ready,
+      ...this.scheduler.suspended,
+      ...this.scheduler.finished,
+      ...(this.process ? [this.process] : []),
+    ];
+
+    return tasks.sort((a, b) => a?.pid - b?.pid).map((process) => process?.color);
+  }
+
   // Processador entra em execução
   run() {
     const exec = this.process ? this.process.pid : 'none';
@@ -139,7 +150,8 @@ export default class CPU {
       this.completeProcess();
     }
     this.sync++;
-    console.log(RED_TEXT + '--------- Execution step finished!---------' + RESET_COLOR)
+    console.log(RED_TEXT + '--------- Execution step finished!---------' + RESET_COLOR);
 
+    return;
   }
 }
