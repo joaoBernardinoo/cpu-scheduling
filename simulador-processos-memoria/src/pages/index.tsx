@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
-import { useState } from 'react';
+
+import CpuComponent from '@/Components/CpuComponent';
 
 
 
@@ -13,6 +14,7 @@ export default function Home() {
       </Head>
       <main>
         <h1>Home</h1>
+        <CpuComponent />
       </main>
     </div>
   );
