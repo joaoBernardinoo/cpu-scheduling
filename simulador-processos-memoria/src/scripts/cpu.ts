@@ -69,6 +69,7 @@ export default class CPU {
   private handleOverhead() {
     if (this.flag && !this.isOverhead()) {
       this.process!.color = 'yellow';
+      this.scheduler.ready.push(this.process!);
       this.requestProcess();
       this.flag = false;
     }
@@ -85,7 +86,6 @@ export default class CPU {
       this.overheadCount = 0;
       this.flag = true;
       this.process!.color = 'red';
-      this.scheduler.ready.push(this.process!);
       console.log('Quantum expired!', this.process!.pid);
       this.handleOverhead();
       return true;
@@ -99,8 +99,7 @@ export default class CPU {
     console.log('Process finished!');
     this.process!.color = 'white';
     this.scheduler.finished.push(this.process!);
-    this.process = undefined;
-
+    this.requestProcess();
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
   }
@@ -116,7 +115,6 @@ export default class CPU {
     return tasks.sort((a, b) => a?.pid - b?.pid).map((process) => process?.color);
   }
 
-  // Processador entra em execução
   run() {
     const exec = this.process ? this.process.pid : 'none';
     console.log(`Starting Process: ${exec} `);

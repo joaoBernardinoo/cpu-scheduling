@@ -10,15 +10,13 @@ export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [processes, setProcesses] = useState<string[][]>([]);
 
-  const cpu = useState<CPU>(new CPU('FCFS'));
+  const cpu = useState<CPU>(new CPU('EDF'));
 
   function handleExec() {
     cpu[0].run();
     const states = cpu[0].getStates();
-    processes.push(states);
-    console.log(processes)
-  }    
-
+    setProcesses((prevProcesses) => [...prevProcesses, states]);
+  }
 
   return (
     <div>
@@ -27,9 +25,17 @@ export default function CpuComponent() {
       <div>
         <button onClick={() => setModalIsOpen(true)}>Adicionar processo</button>
       </div>
-      <ProcessManager scheduler={cpu[0].scheduler}/>
-
-      <Modal isOpen={modalIsOpen} setOpenModal={() => setModalIsOpen(!modalIsOpen)} cpu={cpu[0]}/>
+      <ProcessManager scheduler={cpu[0].scheduler} />
+      <div style={{ display: 'flex'}}>
+        {processes.map((process) => (
+          <div>
+            {process.map((state) => (
+              <div style={{ border: '1px solid black', width: '20px', height: '20px', backgroundColor: state}}></div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <Modal isOpen={modalIsOpen} setOpenModal={() => setModalIsOpen(!modalIsOpen)} cpu={cpu[0]} />
     </div>
-  )
+  );
 }
