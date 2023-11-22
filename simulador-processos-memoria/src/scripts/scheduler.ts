@@ -1,4 +1,13 @@
-class Scheduler {
+import Process from './process';
+
+export default class Scheduler {
+  criteria: string;
+  quantum: number;
+  quantumCount: number;
+  ready: Process[];
+  finished: Process[];
+  suspended: Process[];
+
   constructor(criteria = 'EDF') {
     this.criteria = criteria;
     // Sobrecarga e Quantum
@@ -12,14 +21,14 @@ class Scheduler {
   }
 
   // Mostra o estado atual do escalonador
-  status(sync) {
+  status() {
     console.log(
-      `Ready Queue: ${this.ready.map((p) => p.pid)} quantum: ${this.quantumCount}  t${sync}`
+      `Ready Queue: ${this.ready.map((p) => p.pid)} quantum: ${this.quantumCount}`
     );
   }
 
   // Adiciona o processo da fila de prontos
-  addProcess(process) {
+  addProcess(process: Process) {
     // Azul é espera
     this.ready.push(process);
   }
@@ -27,7 +36,7 @@ class Scheduler {
   // Retira o processo da fila de prontos
   // de acordo com a política de escalonamento
   fetchProcess() {
-    let process = null;
+    let process = undefined;
 
     switch (this.criteria) {
       case 'FCFS':
@@ -50,7 +59,6 @@ class Scheduler {
     if (process) {
       process.color = 'aqua';
     }
-
     return process;
   }
 }
