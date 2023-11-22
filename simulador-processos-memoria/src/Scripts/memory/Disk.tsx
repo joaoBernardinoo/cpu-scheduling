@@ -10,13 +10,17 @@ class Disk {
     this.memory = Array(this.memorySize/this.pageSize).fill(-1);
   }
 
-  addProcess(index: number, processId: number){
+  addProcess(processId: number, index: number, ){
     // guarda a posição da primeira página de um processo numa posição igual ao PID do processo
     this.memory[processId] = index;
   }
 
   removeProcess(processId: number){
     this.memory[processId] = -1;
+  }
+
+  getMemory(){
+    return this.memory;
   }
 }
 

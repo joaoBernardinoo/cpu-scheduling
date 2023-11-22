@@ -15,9 +15,10 @@ class RAM {
     this.emptyPages = 50;
   }
 
-  addProcess(numberPages: number, processId: number) {
+  addProcess(processId: number, numberPages: number,) {
     const index = this.getFreeIndex(numberPages);
 
+    // se não retornou -1, tem espaço
     if(index != -1){
       for (var i = index; i < index + numberPages; i++){
         this.pages[i] = processId;
@@ -25,7 +26,7 @@ class RAM {
       // atualiza nº de paginas vazias
       this.emptyPages -= numberPages; 
     }
-    // algoritmo de substituição de paginas
+    // se não tem espaço, algoritmo de substituição de paginas
     else{
 
     }
@@ -39,16 +40,19 @@ class RAM {
     for (var i = 0; i < this.memorySize/this.pageSize; i++){
       if (this.pages[i] == -1 ){
         counter += 1;
+        // tem o espaço e retorna o index q começa a alocar as páginas
         if(counter == numberPages){
           index = i - (counter-1);
           return index;
         }
       }
+      // se tem processo alocado não conta
       else{
         counter = 0;
       }
     }
 
+    // se não achou espaço então retorna -1
     return index;
   }
 
@@ -70,6 +74,4 @@ class RAM {
 }
 
 
-const ram = new RAM();
-const pages = ram.getPages();
-console.log(pages);
+export default RAM;
