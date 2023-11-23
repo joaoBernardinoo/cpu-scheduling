@@ -57,7 +57,6 @@ export default function Modal({
       burst: data.burst,
       deadline: data.deadline,
       label: data.label,
-      color: data.color,
       priority: data.priority,
     });
     setCounter(counter + 1);
@@ -77,16 +76,6 @@ export default function Modal({
             <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
             <input {...register('deadline')} placeholder="Deadline" />
             <input {...register('priority')} placeholder="Prioridade" />
-            <select {...register('color', { required: true })}>
-              <option value="">Selecione uma cor...</option>
-              <option value="red">Vermelho</option>
-              <option value="blue">Azul</option>
-              <option value="green">Verde</option>
-              <option value="yellow">Amarelo</option>
-              <option value="purple">Roxo</option>
-              <option value="orange">Laranja</option>
-              <option value="white">Branco</option>
-            </select>
             <input type="submit" />
           </form>
           <button onClick={setOpenModal}>Fechar</button>
