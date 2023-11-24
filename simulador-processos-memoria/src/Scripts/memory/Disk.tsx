@@ -1,4 +1,5 @@
 // vai guardar a posição dos processos na RAM (posição da 1ª página)
+// endereço do disco corresponde ao PID do processo
 class Disk {
   private memory: number[];
   private memorySize: number;
@@ -21,6 +22,10 @@ class Disk {
 
   getMemory(){
     return this.memory;
+  }
+  
+  getRAMindex(processId: number){
+    return this.memory[processId];
   }
 }
 
