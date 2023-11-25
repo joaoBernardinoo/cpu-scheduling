@@ -24,6 +24,9 @@ export default function ProcessComponent({process}: {process: Process}) {
                 <div className='priority cell'>
                     <span>{process.priority}</span>
                 </div>
+                <div className='status cell'>
+                    <span>{process.status}</span>
+                </div>
             </div>
         </Container>
     )

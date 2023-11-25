@@ -1,10 +1,37 @@
 import React from 'react';
 
-export default function SchedulerComponent() {
+
+import { Container, Line, Column } from './styles';
+
+export default function SchedulerComponent({listProcesses}: {listProcesses: string[][]}) {
+
+    function defineColor(status: string) {
+        switch (status) {
+            case 'running':
+                return 'blue';
+            case 'ready':
+                return 'yellow';
+            case 'overhead':
+                return 'red';
+            case 'finished':
+                return 'green';
+            default:
+                return 'white';
+        }
+    }
 
     return (
-        <div>
-            <h1>Escalonador</h1>
-        </div>
+        <Container>
+            {listProcesses.map((process, i) => (
+                <Line key={i}>
+                    {process.map((status, j) => (
+                        console.log("cor", status),
+                        <Column key={j} color={defineColor(status)}>
+                        </Column>
+                    )
+                    )}
+                </Line>
+                ))}
+        </Container>
     )
 }

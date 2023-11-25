@@ -2,49 +2,22 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
-import CPU from '@/scripts/cpu';
 import Process from '@/scripts/process';
+import CPU from '@/scripts/cpu';
 
 import { Background, Container } from './styles';
 
-const tasks = [
-    new Process({
-        pid: 11111,
-        arrival: 0,
-        burst: 8,
-        deadline: 35,
-        label: "A",
-    }),
-    new Process({
-        pid: 22222,
-        arrival: 0,
-        burst: 4,
-        deadline: 15,
-        label: "B",
-    }),
-    new Process({
-        pid: 33333,
-        arrival: 8,
-        burst: 2,
-        deadline: 20,
-        label: "C",
-    }),
-    new Process({
-        pid: 44444,
-        arrival: 12,
-        burst: 7,
-        deadline: 25,
-        label: "D",
-    }),
-];
+
 
 export default function Modal({
   isOpen,
   setOpenModal,
-  cpu,
+  processList, 
+  cpu
 }: {
   isOpen: boolean;
   setOpenModal: () => void;
+  processList: Process[];
   cpu: CPU;
 }) {
   const { register, handleSubmit } = useForm();
@@ -55,23 +28,29 @@ export default function Modal({
       pid: counter,
       arrival: data.arrival,
       burst: data.burst,
+      color: data.color,
       deadline: data.deadline,
-      label: data.label,
       priority: data.priority,
     });
     setCounter(counter + 1);
-    cpu.scheduler.addProcess(newProcess);
+    processList.push(newProcess);
+    cpu.addProcess(newProcess);
     setOpenModal();
   };
-
-  cpu.scheduler.ready = tasks;
 
   if (isOpen) {
     return (
       <Background>
         <Container>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <input {...register('label')} placeholder="Nome" />
+            <select {...register('color')}>
+              <option value="red">Vermelho</option>
+              <option value="blue">Azul</option>
+              <option value="green">Verde</option>
+              <option value="yellow">Amarelo</option>
+              <option value="purple">Roxo</option>
+              <option value="pink">Rosa</option>
+            </select>
             <input {...register('arrival')} placeholder="Tempo de chegada" defaultValue={0} />
             <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
             <input {...register('deadline')} placeholder="Deadline" />

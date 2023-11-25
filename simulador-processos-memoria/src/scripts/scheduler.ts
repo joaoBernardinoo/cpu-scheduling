@@ -8,7 +8,7 @@ export default class Scheduler {
   finished: Process[];
   suspended: Process[];
 
-  constructor(criteria = 'EDF') {
+  constructor(criteria: string) {
     this.criteria = criteria;
     // Sobrecarga e Quantum
     this.quantum = 2;
@@ -29,7 +29,7 @@ export default class Scheduler {
 
   // Adiciona o processo da fila de prontos
   addProcess(process: Process) {
-    // Azul é espera
+    process.status = 'ready';
     this.ready.push(process);
   }
 
@@ -57,7 +57,7 @@ export default class Scheduler {
     }
 
     if (process) {
-      process.color = 'aqua';
+      process.status = 'running';
     }
     return process;
   }

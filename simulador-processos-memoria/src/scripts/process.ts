@@ -3,7 +3,7 @@ export default class Process {
   arrival: number;
   burst: number;
   color: string;
-  label: string;
+  status: string;
   scheduled: boolean;
   deadline: number;
   priority: number;
@@ -14,7 +14,6 @@ export default class Process {
     arrival = 0,
     burst = 99,
     color = 'white',
-    label = '',
     deadline = 99,
     priority = 0
 
@@ -24,7 +23,7 @@ export default class Process {
     this.arrival = arrival;
     this.burst = burst;
     this.color = color;
-    this.label = label;
+    this.status = "arriving";
     this.scheduled = false;
     this.deadline = deadline;
     this.priority = priority

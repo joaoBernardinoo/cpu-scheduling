@@ -1,25 +1,50 @@
 import Process from './process';
 import Scheduler from './scheduler';
 
-const RESET_COLOR = '\x1b[0m'; // Código de escape para redefinir a cor ao padrão
-const RED_TEXT = '\x1b[31m'; // Código de escape para texto vermelho
-
 export default class CPU {
   process?: Process;
+  arriving: Process[];
   scheduler: Scheduler;
   sync: number;
+  clock: number;
   idle: 0;
   overheadTime: number;
   overheadCount: number;
   flag: boolean;
 
+
   // Unidade de Processamento Principal
-  constructor(criteria: string) {
+  constructor(criteria = "FCFS", clock = 1) {
     this.process = undefined;
+    this.arriving = [];
     this.scheduler = new Scheduler(criteria);
     this.sync = 0;
+    this.clock = clock;
     this.idle = 0;
     this.overheadTime = 1;
+    this.overheadCount = this.overheadTime;
+    this.flag = false;
+  }
+
+  setClock(clock: number) {
+    this.clock = clock;
+  }
+
+  setCriteria(criteria: string) {
+    this.scheduler.criteria = criteria;
+  }
+
+  addProcess(process: Process) {
+    this.arriving.push(process);
+    this.arriving.sort((a, b) => a.arrival - b.arrival);
+  }
+
+  reset() {
+    this.process = undefined;
+    this.arriving = [];
+    this.scheduler = new Scheduler("FCFS");
+    this.sync = 0;
+    this.idle = 0;
     this.overheadCount = this.overheadTime;
     this.flag = false;
   }
@@ -65,10 +90,17 @@ export default class CPU {
     return this.overheadCount < this.overheadTime;
   }
 
+  private handleArriving() {
+    while (this.arriving.length > 0 && this.arriving[0].arrival == this.sync) {
+      this.scheduler.addProcess(this.arriving.shift()!);
+
+    }
+  }
+
   // Lida com a sobrecarga
   private handleOverhead() {
     if (this.flag && !this.isOverhead()) {
-      this.process!.color = 'yellow';
+      this.process!.status = 'ready';
       this.scheduler.ready.push(this.process!);
       this.requestProcess();
       this.flag = false;
@@ -85,7 +117,7 @@ export default class CPU {
       this.scheduler.quantumCount = 0;
       this.overheadCount = 0;
       this.flag = true;
-      this.process!.color = 'red';
+      this.process!.status = 'overhead';
       console.log('Quantum expired!', this.process!.pid);
       this.handleOverhead();
       return true;
@@ -97,7 +129,7 @@ export default class CPU {
     this.scheduler.quantumCount = 0;
 
     console.log('Process finished!');
-    this.process!.color = 'white';
+    this.process!.status = 'finished';
     this.scheduler.finished.push(this.process!);
     this.requestProcess();
     // Aqui falta calcular o Turn Around do Processo
@@ -106,19 +138,22 @@ export default class CPU {
 
   getStates() {
     const tasks = [
+      ...this.arriving,
       ...this.scheduler.ready,
       ...this.scheduler.suspended,
       ...this.scheduler.finished,
       ...(this.process ? [this.process] : []),
     ];
 
-    return tasks.sort((a, b) => a?.pid - b?.pid).map((process) => process?.color);
+    return tasks.sort((a, b) => a?.pid - b?.pid).map((process) => process?.status);
   }
 
   run() {
     const exec = this.process ? this.process.pid : 'none';
     console.log(`Starting Process: ${exec} `);
     this.status();
+    // Verifica se há processos chegando
+    this.handleArriving();
     if (!this.isReady()) {
       this.requestProcess();
       if (!this.process) return console.log('No process to execute!');
@@ -127,7 +162,6 @@ export default class CPU {
 
     // Verifica se há sobrecarga
     if (this.isOverhead()) {
-      console.log(RED_TEXT + 'Overhead!' + RESET_COLOR);
       this.overheadCount++;
     }
 
@@ -137,7 +171,9 @@ export default class CPU {
     // Decrementa o tempo de execução do processo
     interrupt: if (!this.isFinished()) {
       console.log('Proceed:', this.process!.pid);
-      if (this.handleQuantumExceeded()) break interrupt;
+      if (this.handleQuantumExceeded()){ 
+        break interrupt;
+      }
 
       console.log('Executing process...');
       this.execute();
@@ -148,7 +184,6 @@ export default class CPU {
       this.completeProcess();
     }
     this.sync++;
-    console.log(RED_TEXT + '--------- Execution step finished!---------' + RESET_COLOR);
 
     return;
   }
