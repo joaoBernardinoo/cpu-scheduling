@@ -22,6 +22,7 @@ export default function Home() {
       value={{
         RAM: RAM,
         Disk: Disk,
+        updateMemory: updateMemory,
       }}
     >
       <div>
