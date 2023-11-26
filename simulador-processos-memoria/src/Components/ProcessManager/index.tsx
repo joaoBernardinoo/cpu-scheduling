@@ -9,26 +9,25 @@ export default function ProcessManager({processList}: { processList: Process[] }
 
     return (
         <Container>
-            <h1>Process Manager</h1>
             <div className="process-manager">
                 <ProcessList>
-                    <div className='line'>
-                        <div className='cell'>
+                    <div className='line line-primary'>
+                        <div className='cell desc'>
                             <h4>Cor</h4>
                         </div>
-                        <div className='cell'>
+                        <div className='cell desc'>
                             <h4>PID</h4>
                         </div>
-                        <div className='cell'>
+                        <div className='cell desc'>
                             <h4>Tempo</h4>
                         </div>
-                        <div className='cell'>
+                        <div className='cell desc'>
                             <h4>Deadline</h4>
                         </div>
-                        <div className='cell'>
+                        <div className='cell desc'>
                             <h4>Prioridade</h4>
                         </div>
-                        <div className='cell'>
+                        <div className='cell desc'>
                             <h4>Estado</h4>
                         </div>
                     </div>

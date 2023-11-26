@@ -1,7 +1,19 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  display: flex;
+    display: flex;
+    width: 750px;
+    background-color: #345366;
+    padding: 30px;
+    gap: 20px;
+    border-radius: 20px;
+    min-height: 300px;
+    overflow-x: scroll;
+
+    .listStates {
+        display: flex;
+    }
+
 `;
 
 export const Line = styled.div`

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 import CPU from '@/scripts/cpu';
 import Process from '@/scripts/process';
@@ -7,13 +8,15 @@ import Process from '@/scripts/process';
 import Modal from '@/Components/Modal';
 import ProcessManager from '../ProcessManager';
 import SchedulerComponent from '../SchedulerComponent';
+import StatesComponent from '../StatesComponent';
 
+import { Container, PMContainer, SchedulerContainer } from './styles';
 
 const tasks = [
   new Process({
       pid: 11111,
       arrival: 0,
-      burst: 8,
+      burst: 10,
       deadline: 35,
       color: "red",
       priority: 1,
@@ -21,22 +24,22 @@ const tasks = [
   new Process({
       pid: 22222,
       arrival: 0,
-      burst: 4,
+      burst: 6,
       deadline: 15,
       color: "blue",
       priority: 2,
   }),
   new Process({
       pid: 33333,
-      arrival: 8,
-      burst: 2,
+      arrival: 4,
+      burst: 8,
       deadline: 20,
       color: "green",
       priority: 3,
   }),
   new Process({
       pid: 44444,
-      arrival: 12,
+      arrival: 6,
       burst: 7,
       deadline: 25,
       color: "yellow",
@@ -64,6 +67,7 @@ export default function CpuComponent() {
     console.log("save", saveProcesses);
   }
 
+  /*Reseta tudo*/
   useEffect(() => {
     if (reseted) {
       cpu[0].reset();
@@ -77,6 +81,7 @@ export default function CpuComponent() {
         });
       setAllProcesses(list);
       setProcessesStates([]);
+      setIsAuto(false);
       setReseted(false);
     }
   }, [reseted, saveProcesses, cpu, criteria])
@@ -89,7 +94,7 @@ export default function CpuComponent() {
     setProcessesStates([...processesStates, states])
   }
 
-  
+  /*Inicia execução automatica*/
   useEffect(() => {
     if (isAuto) {
      setTimeout(() => {
@@ -114,60 +119,89 @@ export default function CpuComponent() {
   }
 
   return (
-    <div>
+    <Container>
       <h1>CPU</h1>
-      <div>
-        <button onClick={() => setModalIsOpen(true)}>Adicionar processo</button>
-      </div>
-      <ProcessManager processList={allProcesses}/>
-      <button onClick={saveProcess}>Salvar</button>
-      <div>
-        <h4>Running</h4>
-        <span>{cpu[0].process?.color}</span>
-        <h4>Chegando</h4>
-        {cpu[0].arriving.map((process, i) => (
-          <div key={i}>
-            <span>{process.color}</span>
+      <div className='processesContainer'>
+        <h1 className='title'>Process Manager</h1>
+        <PMContainer>
+          <div className='buttonContainer'>
+              <button className="buttonPM" onClick={() => setModalIsOpen(true)}>Adicionar processo</button>
+              <button className="buttonPM" onClick={saveProcess}>Salvar Processos</button>
+              <button onClick={() => setReseted(true)} className="buttonPM">Resetar</button>
           </div>
-        ))}
-        <h4>Ready</h4>
-        {cpu[0].scheduler.ready.map((process, i) => (
-          <div key={i}>
-            <span>{process.color}</span>
+          <div className='informations'>
+            <ProcessManager processList={allProcesses}/>
+            <StatesComponent cpu={cpu[0]}/>
           </div>
-        ))}
-        <h4>Finished</h4>
-        {cpu[0].scheduler.finished.map((process, i) => (
-          <div key={i}>
-            <span>{process.color}</span>
+        </PMContainer>
+      </div>
+
+      <SchedulerContainer>
+        <div className="selectContainer">
+          <div className='radioContainer'>
+            <label>
+              <input type="radio" name="criteria" value="FCFS" onChange={changeCriteria} />
+              <span>FIFO</span>
+            </label>
           </div>
-        ))}
-        <h4>Suspended</h4>
-        {cpu[0].scheduler.suspended.map((process, i) => (
-          <div key={i}>
-            <span>{process.color}</span>
+          <div className='radioContainer'>
+            <label>
+              <input type="radio" name="criteria" value="SJF" onChange={changeCriteria} />
+              <span>SJF</span>
+            </label>
           </div>
-        ))}
-      </div>
-      <div>
-        <select onChange={changeCriteria}>
-          <option value="FCFS">FCFS</option>
-          <option value="SJF">SJF</option>
-          <option value="RR">RR</option>
-          <option value="PRIORITY">PRIORITY</option>
-          <option value="EDF">EDF</option>
-        </select>
-      </div>
-      <div>
-        <button onClick={() => handleExec()}>Run</button>
-        <button onClick={() => setIsAuto(true)}>Play</button>
-        <button onClick={() => setIsAuto(false)}>Pause</button>
-      </div>
-      <div>
-        <button onClick={() => setReseted(true)}>Resetar</button>
-      </div>
-      <SchedulerComponent listProcesses={processesStates} />
+          <div className='radioContainer'>
+            <label>
+              <input type="radio" name="criteria" value="RR" onChange={changeCriteria}/>
+              <span>RR</span>
+            </label>
+          </div>
+          <div className='radioContainer'>
+            <label>
+              <input type="radio" name="criteria" value="PRIORITY" onChange={changeCriteria} />
+              <span>PR</span>
+            </label>
+          </div>
+          <div className='radioContainer'>
+            <label>
+              <input type="radio" name="criteria" value="EDF" onChange={changeCriteria} />
+              <span>EDF</span>
+            </label>
+          </div>
+        <div className='buttonContainer'>
+          <button className='runButton' onClick={() => handleExec()}>
+            <Image
+              src="/assets/advance.svg"
+              alt="Executar"
+              width={30}
+              height={30}
+            />
+          </button>
+          <button className='runButton' onClick={() => setIsAuto(true)}>            
+            <Image
+                src="/assets/play.svg"
+                alt="Iniciar"
+                width={22}
+                height={22}
+              />
+          </button>
+          <button className='runButton' onClick={() => setIsAuto(false)}>
+            <Image
+                src="/assets/pause.svg"
+                alt="Pausar"
+                width={20}
+                height={20}
+              />
+          </button>
+        </div>
+        </div>
+        <div className='resetButtonContainer'>
+        </div>
+
+        <SchedulerComponent listStatus={processesStates} listProcess={allProcesses}/>
+      </SchedulerContainer>
+
       <Modal isOpen={modalIsOpen} setOpenModal={() => setModalIsOpen(!modalIsOpen)} processList={allProcesses} cpu={cpu[0]}/>
-    </div>
+    </Container>
   );
 }
