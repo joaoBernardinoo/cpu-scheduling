@@ -69,11 +69,6 @@ export default class CPU {
     return this.process!.burst == 0;
   }
 
-  // Verifica se o processo chegou
-  private arrived() {
-    return this.process!.arrival == 0;
-  }
-
   // Verifica se o processo está pronto para ser executado
   private isReady() {
     return this.process != null;
