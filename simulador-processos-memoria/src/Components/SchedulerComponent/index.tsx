@@ -2,20 +2,20 @@ import React from 'react';
 
 import Process from '@/scripts/process';
 
-import { Container, Line, Column } from './styles';
+import { Container, Line, Column, ProcessColor } from './styles';
 
 export default function SchedulerComponent({listStatus, listProcess}: {listStatus: string[][], listProcess: Process[]}) {
 
     function defineColor(status: string) {
         switch (status) {
             case 'running':
-                return 'blue';
+                return '#1AD83A';
             case 'ready':
-                return 'yellow';
+                return '#7A9CC6';
             case 'overhead':
-                return 'red';
+                return '#DA2C38';
             case 'finished':
-                return 'green';
+                return 'transparent';
             default:
                 return 'white';
         }
@@ -25,8 +25,9 @@ export default function SchedulerComponent({listStatus, listProcess}: {listStatu
         <Container>
             <Line>
                 {listProcess.map((process, i) => (
-                    <Column key={i} color={process.color}>
-                    </Column>
+                    <ProcessColor key={i} color={process.color}>
+                        <div className='statusColor'></div>
+                    </ProcessColor>
                 ))}
             </Line> 
             <div className='listStates'>
@@ -34,6 +35,7 @@ export default function SchedulerComponent({listStatus, listProcess}: {listStatu
                     <Line key={i}>
                         {process.map((status, j) => (
                             <Column key={j} color={defineColor(status)}>
+                                <div className='statusColor'></div>
                             </Column>
                         )
                         )}
