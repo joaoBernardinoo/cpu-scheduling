@@ -1,5 +1,5 @@
-import RAM from "@/Scripts/memory/RAM"
-import Disk from "@/Scripts/memory/Disk";
+import RAM from "@/scripts/memory/RAM"
+import Disk from "@/scripts/memory/Disk";
 import React, { useContext } from 'react';
 import MemoryContext from "@/contexts/memoryContext";
 
@@ -27,8 +27,7 @@ export default function MemoryComponent(){
     return(
         <div>
             <h2>oiii eu sou a memoria rsrsrs</h2>
-            {/* tira o comentário p fazer a RAM aparecer */}
-            {/* {
+            {
                 pages.map((pagina: number, index: number) => {
                     return(
                         <div key={index}>
@@ -38,10 +37,8 @@ export default function MemoryComponent(){
                     )
                 })
                 
-            } */}
-
-            {/* DISCO */}
-            {/* {
+            }
+            {
                 memoryDisk.map((pagina: number, index: number) => {
                     return(
                         <div key={index}>
@@ -50,7 +47,7 @@ export default function MemoryComponent(){
                         </div>
                     )
                 })
-            } */}
+            }
         </div>
     )
 }
