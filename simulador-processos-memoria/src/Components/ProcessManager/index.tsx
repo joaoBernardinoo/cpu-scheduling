@@ -10,7 +10,7 @@ import {Container, ProcessList} from './styles';
 export default function ProcessManager({processList}: { processList: Process[] }) {
     const [cells, setCells] = useState<JSX.Element[]>([]);
 
-    useEffect(() => {
+    // useEffect(() => {
         if (processList.length <= 5 && cells.length < 6-processList.length) {
             for (let i=0; i<6-processList.length; i++){
                 setCells([...cells,         
@@ -35,12 +35,11 @@ export default function ProcessManager({processList}: { processList: Process[] }
                 }
             }
         }
-        console.log(cells)
         if (cells.length > 6 - processList.length) {
             setCells(cells.slice(0, 6-processList.length));
 
         }
-    }, [cells, processList]);
+    // }, [cells, processList]);
     
 
     return (
@@ -70,7 +69,7 @@ export default function ProcessManager({processList}: { processList: Process[] }
                     {processList.map((process, index) => (
                         <ProcessComponent key={index} process={process}/>
                     ))}
-                    {cells.map((cell)=> cell)}
+                    {/* {cells.map((cell)=> cell)} */}
                     
                 </ProcessList>
             </div>

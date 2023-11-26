@@ -42,11 +42,12 @@ export default class Scheduler {
     }
   }
 
-  static calculateAverageTurnaroundTime(processes: Process[]) {
+  calculateAverageTurnaroundTime(processes: Process[]) {
     let sum = 0;
     processes.forEach((process) => {
       if (!process.end) return console.warn("")
       sum += process.end - process.arrival;
+
     });
     return sum / processes.length;
   }
