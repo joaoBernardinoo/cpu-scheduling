@@ -19,6 +19,7 @@ const tasks = [
     deadline: 35,
     color: 'red',
     priority: 1,
+    pages: 5,
   }),
   new Process({
     pid: 22222,
@@ -27,6 +28,7 @@ const tasks = [
     deadline: 15,
     color: 'blue',
     priority: 2,
+    pages: 5,
   }),
   new Process({
     pid: 33333,
@@ -35,6 +37,7 @@ const tasks = [
     deadline: 20,
     color: 'green',
     priority: 3,
+    pages: 5,
   }),
   new Process({
     pid: 44444,
@@ -43,6 +46,7 @@ const tasks = [
     deadline: 25,
     color: 'yellow',
     priority: 4,
+    pages: 5,
   }),
 ];
 
