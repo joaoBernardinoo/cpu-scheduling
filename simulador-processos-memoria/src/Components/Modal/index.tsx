@@ -1,9 +1,11 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
+
+import MemoryContext from "@/contexts/memoryContext";
 
 import { Background, Container } from './styles';
 
@@ -22,6 +24,7 @@ export default function Modal({
 }) {
   const { register, handleSubmit } = useForm();
   const [counter, setCounter] = useState<number>(501);
+  const { RAM, Disk } = useContext(MemoryContext);
 
   const onSubmit = async (data: any) => {
     const newProcess = new Process({
@@ -31,7 +34,12 @@ export default function Modal({
       color: data.color,
       deadline: data.deadline,
       priority: data.priority,
+      pages: data.pages,
     });
+    // add na memória
+    const index = RAM.addProcess(counter, data.pages);
+    Disk.addProcess(counter, index);
+
     setCounter(counter + 1);
     processList.push(newProcess);
     cpu.addProcess(newProcess);
@@ -55,6 +63,7 @@ export default function Modal({
             <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
             <input {...register('deadline')} placeholder="Deadline" />
             <input {...register('priority')} placeholder="Prioridade" />
+            <input {...register('pages')} placeholder="Número de Páginas" />
             <input type="submit" />
           </form>
           <button onClick={setOpenModal}>Fechar</button>

@@ -8,6 +8,7 @@ export default class Process {
   deadline: number;
   priority: number;
   end?: number;
+  pages: number;
 
   // Processo com tempo de chegada, tempo de execução, prioridade e deadline
   constructor({
@@ -16,7 +17,8 @@ export default class Process {
     burst = 99,
     color = 'white',
     deadline = 99,
-    priority = 0
+    priority = 0,
+    pages = 1
 
     // falta deadline e prioridade
   }) {
@@ -29,5 +31,6 @@ export default class Process {
     this.deadline = deadline;
     this.priority = priority
     this.end = undefined;
+    this.pages = pages;
   }
 }

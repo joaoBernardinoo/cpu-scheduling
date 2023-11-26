@@ -4,25 +4,19 @@ import React from 'react';
 import CpuComponent from '@/Components/CpuComponent';
 import MemoryComponent from '@/Components/MemoryComponent';
 import { MemoryProvider } from '@/contexts/memoryContext';
-import { useState, useEffect } from 'react';
-
+import RAM from '@/scripts/memory/RAM';
+import Disk from '@/scripts/memory/Disk';
 
 export default function Home() {
-  // arrays com as memórias
-  const [RAM, setRAM] = useState<number[]>([]);
-  const [Disk, setDisk] = useState<number[]>([]);
-
-  const updateMemory = (ramPages: number[], diskPages: number[]) => {
-    setRAM(ramPages);
-    setDisk(diskPages);
-  }
+  // criando memórias
+  const ram = new RAM()
+  const disk = new Disk()
 
   return (
     <MemoryProvider
       value={{
-        RAM: RAM,
-        Disk: Disk,
-        updateMemory: updateMemory,
+        RAM: ram,
+        Disk: disk,
       }}
     >
       <div>

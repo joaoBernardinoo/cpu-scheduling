@@ -1,5 +1,7 @@
 import Process from './process';
 import Scheduler from './scheduler';
+import React, { useContext } from 'react';
+import MemoryContext from "@/contexts/memoryContext";
 
 export default class CPU {
   process?: Process;
@@ -62,6 +64,9 @@ export default class CPU {
   private execute() {
     this.process!.burst--;
     this.scheduler.quantumCount++;
+    const { RAM, Disk } = useContext(MemoryContext);
+    const index = Disk.getRAMindex(this.process!.pid);
+    RAM.executeProcess(index);
   }
 
   // Verifica se o processo acabou
@@ -127,8 +132,14 @@ export default class CPU {
     this.process!.status = 'finished';
     this.scheduler.finished.push(this.process!);
     this.requestProcess();
+
+    // removendo da memória 
+    const { RAM, Disk } = useContext(MemoryContext);
+    RAM.removeProcess(this.process!.pid);
+    Disk.removeProcess(this.process!.pid);
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
+
   }
 
   getStates() {
@@ -172,6 +183,7 @@ export default class CPU {
 
       console.log('Executing process...');
       this.execute();
+      
     }
     this.status();
     // Verifica se o processo acabou
