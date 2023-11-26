@@ -1,10 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
 import CPU from '@/scripts/cpu';
 import Process from '@/scripts/process';
-
 import Modal from '@/Components/Modal';
 import ProcessManager from '../ProcessManager';
 import SchedulerComponent from '../SchedulerComponent';
@@ -15,36 +13,36 @@ import { set } from 'react-hook-form';
 
 const tasks = [
   new Process({
-      pid: 11111,
-      arrival: 0,
-      burst: 10,
-      deadline: 35,
-      color: "red",
-      priority: 1,
+    pid: 11111,
+    arrival: 0,
+    burst: 10,
+    deadline: 35,
+    color: 'red',
+    priority: 1,
   }),
   new Process({
-      pid: 22222,
-      arrival: 0,
-      burst: 6,
-      deadline: 15,
-      color: "blue",
-      priority: 2,
+    pid: 22222,
+    arrival: 0,
+    burst: 6,
+    deadline: 15,
+    color: 'blue',
+    priority: 2,
   }),
   new Process({
-      pid: 33333,
-      arrival: 4,
-      burst: 8,
-      deadline: 20,
-      color: "green",
-      priority: 3,
+    pid: 33333,
+    arrival: 4,
+    burst: 8,
+    deadline: 20,
+    color: 'green',
+    priority: 3,
   }),
   new Process({
-      pid: 44444,
-      arrival: 6,
-      burst: 7,
-      deadline: 25,
-      color: "yellow",
-      priority: 4,
+    pid: 44444,
+    arrival: 6,
+    burst: 7,
+    deadline: 25,
+    color: 'yellow',
+    priority: 4,
   }),
 ];
 
@@ -70,14 +68,21 @@ export default function CpuComponent() {
   }
 
   /*Salva a configuração de processos atuais*/
+  // pra que serve
+  // tantos códigos?
+  // se a vida
+  // não é programada
+  // e as melhores coisas
+  // não tem lógica
+  // by dino
   function saveProcess() {
     const list: Process[] = [];
     allProcesses.map((process) => {
-      var processCopy = Object.assign({}, process)
+      var processCopy = Object.assign({}, process);
       list.push(processCopy);
-      });
+    });
     setSaveProcesses(list);
-    console.log("save", saveProcesses);
+    console.log('save', saveProcesses);
   }
 
   /*Reseta tudo menos os processos salvos*/
@@ -87,17 +92,17 @@ export default function CpuComponent() {
       cpu[0].scheduler.criteria = criteria;
       var list: Process[] = [];
       saveProcesses.map((process) => {
-        var processCopy = Object.assign({}, process)
+        var processCopy = Object.assign({}, process);
         list.push(processCopy);
         cpu[0].addProcess(processCopy);
-        });
+      });
       setAllProcesses(list);
       setProcessesStates([]);
       setIsAuto(false);
       setReseted(false);
       setIsRunning(false);
     }
-  }, [reseted, saveProcesses, cpu, criteria])
+  }, [reseted, saveProcesses, cpu, criteria]);
 
 
   /*Faz uma lista com os status de cada processo*/
@@ -105,21 +110,21 @@ export default function CpuComponent() {
     const states: string[] = [];
     allProcesses.map((process) => {
       states.push(process.status);
-    })
-    setProcessesStates([...processesStates, states])
+    });
+    setProcessesStates([...processesStates, states]);
   }
 
   /*Inicia execução automatica*/
   useEffect(() => {
     if (isAuto) {
-     setTimeout(() => {
-      cpu[0].run();
-      const states: string[] = [];
-      allProcesses.map((process) => {
-        states.push(process.status);
-      })
-      setProcessesStates([...processesStates, states])
-     }, 1000/cpu[0].clock)
+      setTimeout(() => {
+        cpu[0].run();
+        const states: string[] = [];
+        allProcesses.map((process) => {
+          states.push(process.status);
+        });
+        setProcessesStates([...processesStates, states]);
+      }, 1000);
     }
   }, [cpu, allProcesses, processesStates, isAuto]);
 
@@ -135,92 +140,82 @@ export default function CpuComponent() {
   const changeCriteria = (event: any) => {
     setCriteria(event.target.value);
     setReseted(true);
-  }
+  };
 
   return (
     <Container>
       <h1>CPU</h1>
-      <div className='processesContainer'>
-        <h1 className='title'>Process Manager</h1>
+      <div className="processesContainer">
+        <h1 className="title">Process Manager</h1>
         <PMContainer>
           <div className='buttonContainer'>
               <button className="buttonPM" onClick={addProcess}>Adicionar processo</button>
               <button className="buttonPM" onClick={saveProcess}>Salvar Processos</button>
               <button onClick={() => setReseted(true)} className="buttonPM">Resetar</button>
+
           </div>
-          <div className='informations'>
-            <ProcessManager processList={allProcesses}/>
-            <StatesComponent cpu={cpu[0]}/>
+          <div className="informations">
+            <ProcessManager processList={allProcesses} />
+            <StatesComponent cpu={cpu[0]} />
           </div>
         </PMContainer>
       </div>
 
       <SchedulerContainer>
         <div className="selectContainer">
-          <div className='radioContainer'>
+          <div className="radioContainer">
             <label>
               <input type="radio" name="criteria" value="FCFS" onChange={changeCriteria} />
               <span>FIFO</span>
             </label>
           </div>
-          <div className='radioContainer'>
+          <div className="radioContainer">
             <label>
               <input type="radio" name="criteria" value="SJF" onChange={changeCriteria} />
               <span>SJF</span>
             </label>
           </div>
-          <div className='radioContainer'>
+          <div className="radioContainer">
             <label>
-              <input type="radio" name="criteria" value="RR" onChange={changeCriteria}/>
+              <input type="radio" name="criteria" value="RR" onChange={changeCriteria} />
               <span>RR</span>
             </label>
           </div>
-          <div className='radioContainer'>
+          <div className="radioContainer">
             <label>
               <input type="radio" name="criteria" value="PRIORITY" onChange={changeCriteria} />
               <span>PR</span>
             </label>
           </div>
-          <div className='radioContainer'>
+          <div className="radioContainer">
             <label>
               <input type="radio" name="criteria" value="EDF" onChange={changeCriteria} />
               <span>EDF</span>
             </label>
           </div>
-        <div className='buttonContainer'>
-          <button className='runButton' onClick={() => handleExec()}>
-            <Image
-              src="/assets/advance.svg"
-              alt="Executar"
-              width={30}
-              height={30}
-            />
-          </button>
-          <button className='runButton' onClick={() => setIsAuto(true)}>            
-            <Image
-                src="/assets/play.svg"
-                alt="Iniciar"
-                width={22}
-                height={22}
-              />
-          </button>
-          <button className='runButton' onClick={() => setIsAuto(false)}>
-            <Image
-                src="/assets/pause.svg"
-                alt="Pausar"
-                width={20}
-                height={20}
-              />
-          </button>
+          <div className="buttonContainer">
+            <button className="runButton" onClick={() => handleExec()}>
+              <Image src="/assets/advance.svg" alt="Executar" width={30} height={30} />
+            </button>
+            <button className="runButton" onClick={() => setIsAuto(true)}>
+              <Image src="/assets/play.svg" alt="Iniciar" width={22} height={22} />
+            </button>
+            <button className="runButton" onClick={() => setIsAuto(false)}>
+              <Image src="/assets/pause.svg" alt="Pausar" width={20} height={20} />
+            </button>
+          </div>
         </div>
-        </div>
-        <div className='resetButtonContainer'>
-        </div>
+        <div className="resetButtonContainer"></div>
 
-        <SchedulerComponent listStatus={processesStates} listProcess={allProcesses}/>
+        <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
       </SchedulerContainer>
 
-      <Modal isOpen={modalIsOpen} setOpenModal={() => setModalIsOpen(!modalIsOpen)} processList={allProcesses} cpu={cpu[0]}/>
+      <Modal
+        isOpen={modalIsOpen}
+        setOpenModal={() => setModalIsOpen(!modalIsOpen)}
+        processList={allProcesses}
+        cpu={cpu[0]}
+      />
     </Container>
   );
 }

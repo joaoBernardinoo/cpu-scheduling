@@ -22,9 +22,7 @@ export default class Scheduler {
 
   // Mostra o estado atual do escalonador
   status() {
-    console.log(
-      `Ready Queue: ${this.ready.map((p) => p.pid)} quantum: ${this.quantumCount}`
-    );
+    console.log(`Ready Queue: ${this.ready.map((p) => p.pid)} quantum: ${this.quantumCount}`);
   }
 
   // Adiciona o processo da fila de prontos
@@ -42,6 +40,14 @@ export default class Scheduler {
         this.ready.sort((a, b) => a.deadline - b.deadline);
         break;
     }
+  }
+
+  static calculateAverageTurnaroundTime(processes: Process[]) {
+    let sum = 0;
+    processes.forEach((process) => {
+      if (!process.end) return console.warn("") sum += process.end - process.arrival;
+    });
+    return sum / processes.length;
   }
 
   // Retira o processo da fila de prontos

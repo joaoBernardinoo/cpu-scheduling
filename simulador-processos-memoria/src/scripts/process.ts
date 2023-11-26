@@ -7,6 +7,7 @@ export default class Process {
   scheduled: boolean;
   deadline: number;
   priority: number;
+  end?: number;
 
   // Processo com tempo de chegada, tempo de execução, prioridade e deadline
   constructor({
@@ -27,5 +28,6 @@ export default class Process {
     this.scheduled = false;
     this.deadline = deadline;
     this.priority = priority
+    this.end = undefined;
   }
 }
