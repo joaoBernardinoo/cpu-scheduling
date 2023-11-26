@@ -31,6 +31,17 @@ export default class Scheduler {
   addProcess(process: Process) {
     process.status = 'ready';
     this.ready.push(process);
+    switch (this.criteria) {
+      case 'SJF':
+        this.ready.sort((a, b) => a.burst - b.burst);
+        break;
+      case 'PRIORITY':
+        this.ready.sort((a, b) => b.priority - a.priority);
+        break;
+      case 'EDF':
+        this.ready.sort((a, b) => a.deadline - b.deadline);
+        break;
+    }
   }
 
   // Retira o processo da fila de prontos
@@ -52,7 +63,7 @@ export default class Scheduler {
         process = this.ready.sort((a, b) => b.priority - a.priority).shift();
         break;
       case 'EDF':
-        process = this.ready.sort((a, b) => b.deadline - a.deadline).shift();
+        process = this.ready.sort((a, b) => a.deadline - b.deadline).shift();
         break;
     }
 
