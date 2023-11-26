@@ -41,7 +41,7 @@ export default class Scheduler {
         break;
     }
   }
-
+/*
   static calculateAverageTurnaroundTime(processes: Process[]) {
     let sum = 0;
     processes.forEach((process) => {
@@ -49,7 +49,7 @@ export default class Scheduler {
     });
     return sum / processes.length;
   }
-
+*/
   // Retira o processo da fila de prontos
   // de acordo com a política de escalonamento
   fetchProcess() {
