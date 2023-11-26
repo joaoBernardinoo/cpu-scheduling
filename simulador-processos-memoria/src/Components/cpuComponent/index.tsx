@@ -11,6 +11,7 @@ import SchedulerComponent from '../SchedulerComponent';
 import StatesComponent from '../StatesComponent';
 
 import { Container, PMContainer, SchedulerContainer } from './styles';
+import { set } from 'react-hook-form';
 
 const tasks = [
   new Process({
@@ -55,8 +56,20 @@ export default function CpuComponent() {
   const [isAuto, setIsAuto] = useState<boolean>(false);
   const [reseted, setReseted] = useState<boolean>(false);
   const [criteria, setCriteria] = useState<string>("FCFS");
+  const [isRunning, setIsRunning] = useState<boolean>(false);
   const cpu = useState<CPU>(new CPU());
   
+  /*Adiciona um processo*/
+  const addProcess = () => {
+    if (!isRunning) {
+      setModalIsOpen(true);
+    }
+    else {
+      alert("Não é possível adicionar processos enquanto a CPU está executando");
+    }
+  }
+
+  /*Salva a configuração de processos atuais*/
   function saveProcess() {
     const list: Process[] = [];
     allProcesses.map((process) => {
@@ -67,12 +80,11 @@ export default function CpuComponent() {
     console.log("save", saveProcesses);
   }
 
-  /*Reseta tudo*/
+  /*Reseta tudo menos os processos salvos*/
   useEffect(() => {
     if (reseted) {
       cpu[0].reset();
       cpu[0].scheduler.criteria = criteria;
-      console.log("reset", saveProcesses);
       var list: Process[] = [];
       saveProcesses.map((process) => {
         var processCopy = Object.assign({}, process)
@@ -83,9 +95,12 @@ export default function CpuComponent() {
       setProcessesStates([]);
       setIsAuto(false);
       setReseted(false);
+      setIsRunning(false);
     }
   }, [reseted, saveProcesses, cpu, criteria])
 
+
+  /*Faz uma lista com os status de cada processo*/
   function getStates() {
     const states: string[] = [];
     allProcesses.map((process) => {
@@ -104,15 +119,19 @@ export default function CpuComponent() {
         states.push(process.status);
       })
       setProcessesStates([...processesStates, states])
-     }, 1000)
+     }, 1000/cpu[0].clock)
     }
   }, [cpu, allProcesses, processesStates, isAuto]);
 
+  /*Executa uma vez a cpu*/
   function handleExec() {
+    setIsRunning(true);
     cpu[0].run();
     getStates();
   }
 
+
+  /*Altera o metodo de escalonamento*/
   const changeCriteria = (event: any) => {
     setCriteria(event.target.value);
     setReseted(true);
@@ -125,7 +144,7 @@ export default function CpuComponent() {
         <h1 className='title'>Process Manager</h1>
         <PMContainer>
           <div className='buttonContainer'>
-              <button className="buttonPM" onClick={() => setModalIsOpen(true)}>Adicionar processo</button>
+              <button className="buttonPM" onClick={addProcess}>Adicionar processo</button>
               <button className="buttonPM" onClick={saveProcess}>Salvar Processos</button>
               <button onClick={() => setReseted(true)} className="buttonPM">Resetar</button>
           </div>
