@@ -119,7 +119,6 @@ export default function CpuComponent() {
 
   /*Inicia execução automatica*/
   useEffect(() => {
-    console.log(isAuto);
     handleExecAll();
   }, [cpu, allProcesses, processesStates, isAuto]);
 
@@ -127,7 +126,7 @@ export default function CpuComponent() {
   function handleExecAll() {
     if (isAuto) {
       setTimeout(() => {
-        cpu[0].run(updateStates);
+        cpu[0].run(updateStates, allProcesses);
       }, 1000);
     }
   }
@@ -135,7 +134,7 @@ export default function CpuComponent() {
   /*Executa uma vez a cpu*/
   function handleExec() {
     setIsRunning(true);
-    cpu[0].run(updateStates);
+    cpu[0].run(updateStates, allProcesses);
   }
 
   /*Altera o metodo de escalonamento*/
