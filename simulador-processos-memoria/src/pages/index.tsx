@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 
-import CpuComponent from '@/Components/CpuComponent';
+import CpuComponent from '@/Components/cpuComponent';
 import MemoryComponent from '@/Components/MemoryComponent';
 import { MemoryProvider } from '@/contexts/memoryContext';
 import RAM from '@/scripts/memory/RAM';
@@ -24,7 +24,6 @@ export default function Home() {
         <title>Home</title>
       </Head>
       <main>
-        <h1>Home</h1>
         <CpuComponent />
         <MemoryComponent />
       </main>

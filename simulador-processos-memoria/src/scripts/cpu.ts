@@ -14,9 +14,8 @@ export default class CPU {
   overheadCount: number;
   flag: boolean;
 
-
   // Unidade de Processamento Principal
-  constructor(criteria = "FCFS", clock = 1) {
+  constructor(criteria = 'FCFS', clock = 1) {
     this.process = undefined;
     this.arriving = [];
     this.scheduler = new Scheduler(criteria);
@@ -44,7 +43,7 @@ export default class CPU {
   reset() {
     this.process = undefined;
     this.arriving = [];
-    this.scheduler = new Scheduler("FCFS");
+    this.scheduler = new Scheduler('FCFS');
     this.sync = 0;
     this.idle = 0;
     this.overheadCount = this.overheadTime;
@@ -93,7 +92,6 @@ export default class CPU {
   private handleArriving() {
     while (this.arriving.length > 0 && this.arriving[0].arrival == this.sync) {
       this.scheduler.addProcess(this.arriving.shift()!);
-
     }
   }
 
@@ -126,11 +124,13 @@ export default class CPU {
 
   // Envia o processo para a lista de processos finalizados
   private completeProcess() {
-    this.scheduler.quantumCount = 0;
+    if (!(this.process && this.isFinished())) return;
 
+    this.scheduler.quantumCount = 0;
     console.log('Process finished!');
-    this.process!.status = 'finished';
+    this.process.status = 'finished';
     this.scheduler.finished.push(this.process!);
+    this.process.end = this.sync;
     this.requestProcess();
 
     // removendo da memória 
@@ -154,7 +154,7 @@ export default class CPU {
     return tasks.sort((a, b) => a?.pid - b?.pid).map((process) => process?.status);
   }
 
-  run() {
+  run(updateStates: Function) {
     const exec = this.process ? this.process.pid : 'none';
     console.log(`Starting Process: ${exec} `);
     this.status();
@@ -162,8 +162,13 @@ export default class CPU {
     this.handleArriving();
     if (!this.isReady()) {
       this.requestProcess();
-      if (!this.process) return console.log('No process to execute!');
-      console.log('Requesting process...', this.process!.pid);
+      if (!this.process) {
+        console.log('No process to execute!');
+        this.idle++;
+        this.sync++;
+        console.log('Idle time:', this.idle)
+        return;
+      } else console.log('Requesting process...', this.process!.pid);
     }
 
     // Verifica se há sobrecarga
@@ -177,7 +182,7 @@ export default class CPU {
     // Decrementa o tempo de execução do processo
     interrupt: if (!this.isFinished()) {
       console.log('Proceed:', this.process!.pid);
-      if (this.handleQuantumExceeded()){ 
+      if (this.handleQuantumExceeded()) {
         break interrupt;
       }
 
@@ -186,10 +191,11 @@ export default class CPU {
       
     }
     this.status();
+
+    // Pega os estados dos processos
+    updateStates();
     // Verifica se o processo acabou
-    if (this.process && this.isFinished()) {
-      this.completeProcess();
-    }
+    this.completeProcess();
     this.sync++;
 
     return;

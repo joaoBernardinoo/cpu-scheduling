@@ -9,12 +9,13 @@ import SchedulerComponent from '../SchedulerComponent';
 import StatesComponent from '../StatesComponent';
 
 import { Container, PMContainer, SchedulerContainer } from './styles';
+import { calculateOverrideValues } from 'next/dist/server/font-utils';
 
 const tasks = [
   new Process({
     pid: 11111,
     arrival: 0,
-    burst: 10,
+    burst: 2,
     deadline: 35,
     color: 'red',
     priority: 1,
@@ -22,7 +23,7 @@ const tasks = [
   new Process({
     pid: 22222,
     arrival: 0,
-    burst: 6,
+    burst: 2,
     deadline: 15,
     color: 'blue',
     priority: 2,
@@ -30,7 +31,7 @@ const tasks = [
   new Process({
     pid: 33333,
     arrival: 4,
-    burst: 8,
+    burst: 2,
     deadline: 20,
     color: 'green',
     priority: 3,
@@ -38,7 +39,7 @@ const tasks = [
   new Process({
     pid: 44444,
     arrival: 6,
-    burst: 7,
+    burst: 2,
     deadline: 25,
     color: 'yellow',
     priority: 4,
@@ -53,8 +54,19 @@ export default function CpuComponent() {
   const [isAuto, setIsAuto] = useState<boolean>(false);
   const [reseted, setReseted] = useState<boolean>(false);
   const [criteria, setCriteria] = useState<string>('FCFS');
+  const [isRunning, setIsRunning] = useState<boolean>(false);
   const cpu = useState<CPU>(new CPU());
 
+  /*Adiciona um processo*/
+  const addProcess = () => {
+    if (!isRunning) {
+      setModalIsOpen(true);
+    } else {
+      alert('Não é possível adicionar processos enquanto a CPU está executando');
+    }
+  };
+
+  /*Salva a configuração de processos atuais*/
   // pra que serve
   // tantos códigos?
   // se a vida
@@ -70,15 +82,14 @@ export default function CpuComponent() {
       list.push(processCopy);
     });
     setSaveProcesses(list);
-    console.log('save', saveProcesses);
+    // console.log('save', saveProcesses);
   }
 
-  /*Reseta tudo*/
+  /*Reseta tudo menos os processos salvos*/
   useEffect(() => {
     if (reseted) {
       cpu[0].reset();
       cpu[0].scheduler.criteria = criteria;
-      console.log('reset', saveProcesses);
       var list: Process[] = [];
       saveProcesses.map((process) => {
         var processCopy = Object.assign({}, process);
@@ -89,10 +100,12 @@ export default function CpuComponent() {
       setProcessesStates([]);
       setIsAuto(false);
       setReseted(false);
+      setIsRunning(false);
     }
   }, [reseted, saveProcesses, cpu, criteria]);
 
-  function getStates() {
+  /*Faz uma lista com os status de cada processo*/
+  function updateStates() {
     const states: string[] = [];
     allProcesses.map((process) => {
       states.push(process.status);
@@ -102,23 +115,26 @@ export default function CpuComponent() {
 
   /*Inicia execução automatica*/
   useEffect(() => {
-    if (isAuto) {
-      setTimeout(() => {
-        cpu[0].run();
-        const states: string[] = [];
-        allProcesses.map((process) => {
-          states.push(process.status);
-        });
-        setProcessesStates([...processesStates, states]);
-      }, 1000);
-    }
+    console.log(isAuto);
+    handleExecAll();
   }, [cpu, allProcesses, processesStates, isAuto]);
 
-  function handleExec() {
-    cpu[0].run();
-    getStates();
+  /* Executa a cpu até o fim*/
+  function handleExecAll() {
+    if (isAuto) {
+      setTimeout(() => {
+        cpu[0].run(updateStates);
+      }, 1000);
+    }
   }
 
+  /*Executa uma vez a cpu*/
+  function handleExec() {
+    setIsRunning(true);
+    cpu[0].run(updateStates);
+  }
+
+  /*Altera o metodo de escalonamento*/
   const changeCriteria = (event: any) => {
     setCriteria(event.target.value);
     setReseted(true);
@@ -126,12 +142,11 @@ export default function CpuComponent() {
 
   return (
     <Container>
-      <h1>CPU</h1>
       <div className="processesContainer">
         <h1 className="title">Process Manager</h1>
         <PMContainer>
           <div className="buttonContainer">
-            <button className="buttonPM" onClick={() => setModalIsOpen(true)}>
+            <button className="buttonPM" onClick={addProcess}>
               Adicionar processo
             </button>
             <button className="buttonPM" onClick={saveProcess}>
