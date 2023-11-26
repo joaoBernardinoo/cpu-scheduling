@@ -15,15 +15,15 @@ const tasks = [
   new Process({
     pid: 11111,
     arrival: 0,
-    burst: 2,
+    burst: 4,
     deadline: 35,
     color: 'red',
     priority: 1,
   }),
   new Process({
     pid: 22222,
-    arrival: 0,
-    burst: 2,
+    arrival: 2,
+    burst: 4,
     deadline: 15,
     color: 'blue',
     priority: 2,
@@ -31,7 +31,7 @@ const tasks = [
   new Process({
     pid: 33333,
     arrival: 4,
-    burst: 2,
+    burst: 4,
     deadline: 20,
     color: 'green',
     priority: 3,
@@ -39,7 +39,7 @@ const tasks = [
   new Process({
     pid: 44444,
     arrival: 6,
-    burst: 2,
+    burst: 4,
     deadline: 25,
     color: 'yellow',
     priority: 4,
