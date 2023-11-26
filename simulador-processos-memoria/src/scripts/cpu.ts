@@ -118,7 +118,7 @@ export default class CPU {
   }
 
   // Envia o processo para a lista de processos finalizados
-  private completeProcess() {
+  private completeProcess(allProcess: Process[]) {
     if (!(this.process && this.isFinished())) return;
 
     this.scheduler.quantumCount = 0;
@@ -127,23 +127,18 @@ export default class CPU {
     this.scheduler.finished.push(this.process!);
     this.process.end = this.sync;
     this.requestProcess();
+
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
+    if (allProcess.length == this.scheduler.finished.length) {
+      let averageTurnAround = this.scheduler.calculateAverageTurnaroundTime(
+        this.scheduler.finished
+      );
+      console.log('Average Turn Around: ', averageTurnAround);
+    }
   }
 
-  getStates() {
-    const tasks = [
-      ...this.arriving,
-      ...this.scheduler.ready,
-      ...this.scheduler.suspended,
-      ...this.scheduler.finished,
-      ...(this.process ? [this.process] : []),
-    ];
-
-    return tasks.sort((a, b) => a?.pid - b?.pid).map((process) => process?.status);
-  }
-
-  run(updateStates: Function) {
+  run(updateStates: Function, allProcess: Process[]) {
     const exec = this.process ? this.process.pid : 'none';
     console.log(`Starting Process: ${exec} `);
     this.status();
@@ -155,7 +150,7 @@ export default class CPU {
         console.log('No process to execute!');
         this.idle++;
         this.sync++;
-        console.log('Idle time:', this.idle)
+        console.log('Idle time:', this.idle);
         return;
       } else console.log('Requesting process...', this.process!.pid);
     }
@@ -185,7 +180,6 @@ export default class CPU {
     // Verifica se o processo acabou
     this.completeProcess();
     this.sync++;
-
     return;
   }
 }
