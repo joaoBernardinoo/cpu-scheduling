@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import Image from 'next/image';
 
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
@@ -42,6 +43,12 @@ export default function Modal({
     return (
       <Background>
         <Container>
+          <div className='modalTitle'>
+            <h1>Adicionar Processo</h1>
+            <button onClick={setOpenModal}>
+              <Image src="/assets/close.svg" alt="Fechar" width={20} height={20} />
+            </button>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <select {...register('color')}>
               <option value="red">Vermelho</option>
@@ -57,7 +64,7 @@ export default function Modal({
             <input {...register('priority')} placeholder="Prioridade" />
             <input type="submit" />
           </form>
-          <button onClick={setOpenModal}>Fechar</button>
+          
         </Container>
       </Background>
     );

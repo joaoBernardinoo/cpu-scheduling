@@ -166,7 +166,7 @@ export default function CpuComponent() {
         <div className="selectContainer">
           <div className="radioContainer">
             <label>
-              <input type="radio" name="criteria" value="FCFS" onChange={changeCriteria} />
+              <input type="radio" name="criteria" value="FCFS" onChange={changeCriteria} checked/>
               <span>FIFO</span>
             </label>
           </div>

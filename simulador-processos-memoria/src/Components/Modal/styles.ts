@@ -23,5 +23,25 @@ export const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     border-radius: 10px;
+
+    .modalTitle {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #022F40;
+        padding: 20px;
+        border-bottom: 1px solid gray;
+    }
+    .modalTitle button {
+        background-color: transparent;
+        border: none;
+    }
+
+    .modalTitle button:hover {
+        cursor: pointer;
+    }
 `
 
