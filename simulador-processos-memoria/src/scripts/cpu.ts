@@ -63,7 +63,7 @@ export default class CPU {
   private execute(RAM: RAM, Disk: Disk) {
     this.process!.burst--;
     this.scheduler.quantumCount++;
-
+    
     // add na memória
     const index = Disk.getRAMindex(this.process!.pid);
     RAM.executeProcess(index);
