@@ -2,6 +2,7 @@ import Process from './process';
 import Scheduler from './scheduler';
 import RAM from './memory/RAM';
 import Disk from './memory/Disk';
+import { availableParallelism } from 'os';
 
 export default class CPU {
   process?: Process;
@@ -13,6 +14,7 @@ export default class CPU {
   overheadTime: number;
   overheadCount: number;
   flag: boolean;
+  tAm: number;
 
   // Unidade de Processamento Principal
   constructor(criteria = 'FCFS', clock = 1) {
@@ -25,6 +27,7 @@ export default class CPU {
     this.overheadTime = 1;
     this.overheadCount = this.overheadTime;
     this.flag = false;
+    this.tAm = 0;
   }
 
   setClock(clock: number) {
@@ -140,12 +143,12 @@ export default class CPU {
 
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
-    console.log(allProcess.length, this.scheduler.finished.length);
     if (allProcess.length == this.scheduler.finished.length) {
       let averageTurnAround = this.scheduler.calculateAverageTurnaroundTime(
         this.scheduler.finished
       );
       console.log('Average Turn Around: ', averageTurnAround);
+      this.tAm = averageTurnAround;
     }
   }
 
@@ -180,7 +183,18 @@ export default class CPU {
       if (this.handleQuantumExceeded()) {
         break interrupt;
       }
-
+      console.log(this.process!.deadline + this.process!.arrival)
+      if (this.process!.deadline + this.process!.arrival <= this.sync) {
+        console.log('Deadline exceeded!');
+        this.process!.status = 'dead';
+        this.scheduler.finished.push(this.process!);
+        this.process!.end = this.sync + 1;
+        // removendo da memória
+        RAM.removeProcess(this.process!.pid);
+        Disk.removeProcess(this.process!.pid);
+        this.requestProcess();
+        break interrupt;
+      }
       console.log('Executing process...');
       this.execute(RAM, Disk);
     }

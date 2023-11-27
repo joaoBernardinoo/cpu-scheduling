@@ -7,17 +7,14 @@ import Image from 'next/image';
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
 
-
 import { Background, Container } from './styles';
 import RAM from '@/scripts/memory/RAM';
 import Disk from '@/scripts/memory/Disk';
 
-
-
 export default function Modal({
   isOpen,
   setOpenModal,
-  processList, 
+  processList,
   cpu,
   RAM,
   Disk,
@@ -38,9 +35,9 @@ export default function Modal({
       arrival: data.arrival,
       burst: data.burst,
       color: data.color,
-      deadline: data.deadline,
+      deadline: data.deadline == undefined ? 99 : data.deadline,
       priority: data.priority,
-      pages: data.pages,
+      pages: parseInt(data.pages),
     });
     // add na memória
     const index = RAM.addProcess(counter, parseInt(data.pages));
@@ -76,7 +73,8 @@ export default function Modal({
             </label>
             <label>
               <span>Tempo de chegada</span>
-            <input {...register('arrival')} inputMode='numeric' />
+            <input {...register('arrival')}               inputMode="numeric"
+              defaultValue={0} />
             </label>
             <label>
             <span>Tempo de execução</span>
@@ -92,7 +90,8 @@ export default function Modal({
             </label>
             <label>
             <span>Número de Páginas</span>
-            <input {...register('pages')}  />
+            <input {...register('pages')}   defaultValue={1}
+              inputMode="numeric"/>
             </label>
             <div className='sectionSubmit'>
               <input type="submit" className='submit'/>

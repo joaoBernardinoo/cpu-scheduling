@@ -52,7 +52,6 @@ const tasks = [
   }),
 ];
 
-
 export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [processesStates, setProcessesStates] = useState<string[][]>([]);
@@ -114,10 +113,17 @@ export default function CpuComponent() {
       setIsAuto(false);
       setReseted(false);
       setIsRunning(false);
-      setRam(new RAM());
-      setDisk(new Disk());
+      const newRam = new RAM();
+      const newDisk = new Disk();
+      saveProcesses.map((process) => {
+        console.log(typeof process.pages)
+        newRam.addProcess(process.pid, process.pages);
+        newDisk.addProcess(process.pid, ram.getPages().indexOf(process.pid));
+      });
+      setRam(newRam);
+      setDisk(newDisk);
     }
-  }, [reseted, saveProcesses, cpu, criteria]);
+  }, [reseted, saveProcesses, cpu, criteria, ram, disk]);
 
   /*Faz uma lista com os status de cada processo*/
   function updateStates() {
@@ -132,7 +138,6 @@ export default function CpuComponent() {
   useEffect(() => {
     handleExecAll();
   }, [cpu, allProcesses, processesStates, isAuto, handleExecAll]);
-
 
   /* Executa a cpu até o fim*/
   function handleExecAll() {
@@ -181,7 +186,7 @@ export default function CpuComponent() {
               <ProcessManager processList={allProcesses} />
             </div>
           </div>
-            <StatesComponent cpu={cpu[0]} />
+          <StatesComponent cpu={cpu[0]} />
         </PMContainer>
       </div>
       <CpuView>
@@ -233,12 +238,8 @@ export default function CpuComponent() {
 
           <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
         </SchedulerContainer>
-        <div>
-          <select value={selectedOption} onChange={handleSelectChange}>
-            <option value="FIFO">FIFO</option>
-            <option value="LRU">LRU</option>
-          </select>
-        </div>
+        {/* <div>
+        </div> */}
         <MemoryComponent
          RAM={ram}
          Disk={disk}
