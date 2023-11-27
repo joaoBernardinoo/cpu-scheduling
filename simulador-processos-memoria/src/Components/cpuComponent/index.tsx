@@ -137,7 +137,7 @@ export default function CpuComponent() {
   /*Inicia execução automatica*/
   useEffect(() => {
     handleExecAll();
-  }, [cpu, allProcesses, processesStates, isAuto]);
+  }, [cpu, allProcesses, processesStates, isAuto, handleExecAll]);
 
   /* Executa a cpu até o fim*/
   function handleExecAll() {
@@ -189,6 +189,9 @@ export default function CpuComponent() {
           <StatesComponent cpu={cpu[0]} />
         </PMContainer>
       </div>
+      <div>
+        {cpu[0].tAm}
+      </div>
       <CpuView>
         <SchedulerContainer>
           <div className="selectContainer">
@@ -238,8 +241,12 @@ export default function CpuComponent() {
 
           <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
         </SchedulerContainer>
-        {/* <div>
-        </div> */}
+        <div>
+          <select value={selectedOption} onChange={handleSelectChange}>
+            <option value="FIFO">FIFO</option>
+            <option value="LRU">LRU</option>
+          </select>
+        </div> 
         <MemoryComponent
          RAM={ram}
          Disk={disk}

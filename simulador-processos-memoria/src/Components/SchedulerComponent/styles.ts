@@ -33,6 +33,12 @@ export const ProcessColor = styled.div`
 export const Line = styled.div`
     display: flex;
     flex-direction: column;
+
+    span {
+        font-family: 'Oswald', sans-serif;
+        font-size: 18px;
+        color: #F0F7F4;
+    }
 `;
 
 export const Column = styled.div`

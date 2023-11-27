@@ -1,6 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useState, useContext } from 'react';
+import Image from 'next/image';
+
 
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
@@ -51,7 +53,15 @@ export default function Modal({
     return (
       <Background>
         <Container>
+          <div className='modalTitle'>
+            <h1>Adicionar Processo</h1>
+            <button onClick={setOpenModal}>
+              <Image src="/assets/close.svg" alt="Fechar" width={20} height={20} />
+            </button>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <label>
+              <span>Selecione a cor</span>
             <select {...register('color')}>
               <option value="red">Vermelho</option>
               <option value="blue">Azul</option>
@@ -60,24 +70,34 @@ export default function Modal({
               <option value="purple">Roxo</option>
               <option value="pink">Rosa</option>
             </select>
-            <input
-              {...register('arrival')}
-              placeholder="Tempo de chegada"
-              inputMode="numeric"
-              defaultValue={0}
-            />
-            <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
-            <input {...register('deadline')} placeholder="Deadline" />
-            <input {...register('priority')} placeholder="Prioridade" />
-            <input
-              {...register('pages')}
-              placeholder="Número de Páginas"
-              defaultValue={1}
-              inputMode="numeric"
-            />
-            <input type="submit" />
+            </label>
+            <label>
+              <span>Tempo de chegada</span>
+            <input {...register('arrival')}               inputMode="numeric"
+              defaultValue={0} />
+            </label>
+            <label>
+            <span>Tempo de execução</span>
+            <input {...register('burst')} />
+            </label>
+            <label>
+            <span>Deadline</span>
+            <input {...register('deadline')} />
+            </label>
+            <label>
+            <span>Prioridade</span>
+            <input {...register('priority')}  />
+            </label>
+            <label>
+            <span>Número de Páginas</span>
+            <input {...register('pages')}   defaultValue={1}
+              inputMode="numeric"/>
+            </label>
+            <div className='sectionSubmit'>
+              <input type="submit" className='submit'/>
+            </div>
           </form>
-          <button onClick={setOpenModal}>Fechar</button>
+          
         </Container>
       </Background>
     );
