@@ -62,8 +62,12 @@ export default function CpuComponent() {
   const [criteria, setCriteria] = useState<string>('FCFS');
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const cpu = useState<CPU>(new CPU());
-  const [ram, setRam] = useState<RAM>(new RAM());
+  const [selectedOption, setSelectedOption] = useState<string>('FIFO');
+  const [ram, setRam] = useState<RAM>(new RAM(selectedOption));
   const [disk, setDisk] = useState<Disk>(new Disk());
+  
+
+  
 
   /*Adiciona um processo*/
   const addProcess = () => {
@@ -143,6 +147,11 @@ export default function CpuComponent() {
       }, 1000);
     }
   }
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    setSelectedOption(selectedValue);
+  };
 
   /*Executa uma vez a cpu*/
   function handleExec() {
@@ -231,7 +240,10 @@ export default function CpuComponent() {
         </SchedulerContainer>
         {/* <div>
         </div> */}
-        <MemoryComponent RAM={ram} Disk={disk} />
+        <MemoryComponent
+         RAM={ram}
+         Disk={disk}
+         />
       </CpuView>
 
       <Modal

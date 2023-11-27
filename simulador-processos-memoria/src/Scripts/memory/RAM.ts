@@ -45,7 +45,9 @@ class RAM {
       this.updateLRU();
       this.LRUCounter[processId] = 0;
     }
-    console.log("processo não está na RAM!");
+    else{
+      console.log("processo não está na RAM!");
+    }
   }
 
 
@@ -136,7 +138,6 @@ class RAM {
       this.emptyPages++;
       index++;
     }
-    console.log("testao ", this.pages)
   }
 
 
@@ -147,7 +148,6 @@ class RAM {
         while(true){
           this.removeProcess(this.FIFOqueue[0]); 
           
-          console.log("teste2 ", this.getFreeIndex(newNumberPages));
           // se tiver espaço suficiente, adiciona. Se não, continua o loop
           if(this.getFreeIndex(newNumberPages) != -1){
             this.addProcess(newProcessID, newNumberPages);
