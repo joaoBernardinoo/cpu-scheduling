@@ -5,9 +5,10 @@ import { useState, useContext } from 'react';
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
 
-import MemoryContext from "@/contexts/memoryContext";
 
 import { Background, Container } from './styles';
+import RAM from '@/Scripts/memory/RAM';
+import Disk from '@/Scripts/memory/Disk';
 
 
 
@@ -15,16 +16,19 @@ export default function Modal({
   isOpen,
   setOpenModal,
   processList, 
-  cpu
+  cpu,
+  RAM,
+  Disk,
 }: {
   isOpen: boolean;
   setOpenModal: () => void;
   processList: Process[];
   cpu: CPU;
+  RAM: RAM;
+  Disk: Disk;
 }) {
   const { register, handleSubmit } = useForm();
   const [counter, setCounter] = useState<number>(501);
-  const { RAM, Disk } = useContext(MemoryContext);
 
   const onSubmit = async (data: any) => {
     const newProcess = new Process({

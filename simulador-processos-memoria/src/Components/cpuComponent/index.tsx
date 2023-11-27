@@ -52,13 +52,6 @@ const tasks = [
   }),
 ];
 
-function fillProcess(RAM: RAM, Disk: Disk){
-  // add na memória os processos pré-definidos
-  tasks.forEach((process) => {
-    const index = RAM.addProcess(process.pid, process.pages);
-    Disk.addProcess(process.pid, index);
-  });
-}
 
 export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -74,7 +67,6 @@ export default function CpuComponent() {
   const [disk, setDisk] = useState<Disk>(new Disk());
 
   
-  // fillProcess(RAM, Disk);
 
   /*Adiciona um processo*/
   const addProcess = () => {
@@ -137,11 +129,12 @@ export default function CpuComponent() {
     handleExecAll();
   }, [cpu, allProcesses, processesStates, isAuto]);
 
+
   /* Executa a cpu até o fim*/
   function handleExecAll() {
     if (isAuto) {
       setTimeout(() => {
-        cpu[0].run(updateStates, allProcesses, RAM, Disk);
+        cpu[0].run(updateStates, allProcesses, ram, disk);
       }, 1000);
     }
   }
@@ -149,7 +142,7 @@ export default function CpuComponent() {
   /*Executa uma vez a cpu*/
   function handleExec() {
     setIsRunning(true);
-    cpu[0].run(updateStates, allProcesses, RAM, Disk);
+    cpu[0].run(updateStates, allProcesses, ram, disk);
   }
 
   /*Altera o metodo de escalonamento*/
@@ -231,7 +224,10 @@ export default function CpuComponent() {
 
           <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
         </SchedulerContainer>
-        <MemoryComponent />
+        <MemoryComponent
+         RAM={ram}
+         Disk={disk}
+         />
       </CpuView>
 
       <Modal
@@ -239,6 +235,8 @@ export default function CpuComponent() {
         setOpenModal={() => setModalIsOpen(!modalIsOpen)}
         processList={allProcesses}
         cpu={cpu[0]}
+        RAM={ram}
+        Disk={disk}
       />
     </Container>
   );
