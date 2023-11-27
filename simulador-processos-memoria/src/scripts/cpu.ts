@@ -183,7 +183,7 @@ export default class CPU {
       if (this.handleQuantumExceeded()) {
         break interrupt;
       }
-      console.log(this.process!.deadline + this.process!.arrival)
+      console.log(this.process!.deadline + this.process!.arrival <= this.sync)
       if (this.process!.deadline + this.process!.arrival <= this.sync) {
         console.log('Deadline exceeded!');
         this.process!.status = 'dead';

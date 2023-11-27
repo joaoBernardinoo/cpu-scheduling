@@ -30,10 +30,10 @@ export default function Modal({
   const onSubmit = async (data: any) => {
     const newProcess = new Process({
       pid: counter,
-      arrival: data.arrival,
+      arrival: parseInt(data.arrival),
       burst: data.burst,
       color: data.color,
-      deadline: data.deadline == undefined ? 99 : data.deadline,
+      deadline: data.deadline == undefined ? 99 : parseInt(data.deadline),
       priority: data.priority,
       pages: parseInt(data.pages),
     });
