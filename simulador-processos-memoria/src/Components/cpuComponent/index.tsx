@@ -242,7 +242,7 @@ export default function CpuComponent() {
           <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
         </SchedulerContainer>
         <div>
-          <select value={selectedOption} onChange={handleSelectChange}>
+          <select value={selectedOption} onChange={handleSelectChange} className='selectCriteriaRam'>
             <option value="FIFO">FIFO</option>
             <option value="LRU">LRU</option>
           </select>

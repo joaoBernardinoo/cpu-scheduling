@@ -128,4 +128,13 @@ export const SchedulerContainer = styled.div`
 
 export const CpuView = styled.div`
   display: flex;
+
+  .selectCriteriaRam{
+        width:  60px;
+        height: 25px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        color: #fff;
+        background-color: #022f40; 
+  }
 `;
