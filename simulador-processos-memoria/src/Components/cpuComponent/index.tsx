@@ -11,6 +11,7 @@ import RAM from '@/Scripts/memory/RAM';
 import Disk from '@/Scripts/memory/Disk';
 import MemoryComponent from '@/Components/MemoryComponent';
 import { Container, CpuView, PMContainer, SchedulerContainer } from './styles';
+import { set } from 'react-hook-form';
 
 const tasks = [
   new Process({
@@ -56,7 +57,7 @@ export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [processesStates, setProcessesStates] = useState<string[][]>([]);
   const [allProcesses, setAllProcesses] = useState<Process[]>([]);
-  const [saveProcesses, setSaveProcesses] = useState<Process[]>(tasks);
+  const [saveProcesses, setSaveProcesses] = useState<Process[]>([]);
   const [isAuto, setIsAuto] = useState<boolean>(false);
   const [reseted, setReseted] = useState<boolean>(false);
   const [criteria, setCriteria] = useState<string>('FCFS');
@@ -111,6 +112,8 @@ export default function CpuComponent() {
       setIsAuto(false);
       setReseted(false);
       setIsRunning(false);
+      setRam(new RAM());
+      setDisk(new Disk());
     }
   }, [reseted, saveProcesses, cpu, criteria]);
 

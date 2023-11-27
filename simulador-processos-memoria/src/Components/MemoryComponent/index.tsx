@@ -16,7 +16,7 @@ export default function MemoryComponent({RAM, Disk}: {RAM: RAM, Disk: Disk}) {
           <div key={index} className='ramCell'>
             <p>{index}</p>  
             {/* add processo */}
-            <p>PID: {pagina}</p>
+            <p>{pagina}</p>
           </div>
         );
       })}
