@@ -16,6 +16,8 @@ export default function SchedulerComponent({listStatus, listProcess}: {listStatu
                 return '#DA2C38';
             case 'finished':
                 return 'transparent';
+            case 'dead':
+                return '#000000';
             default:
                 return 'white';
         }

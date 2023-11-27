@@ -5,17 +5,14 @@ import { useState, useContext } from 'react';
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
 
-
 import { Background, Container } from './styles';
 import RAM from '@/scripts/memory/RAM';
 import Disk from '@/scripts/memory/Disk';
 
-
-
 export default function Modal({
   isOpen,
   setOpenModal,
-  processList, 
+  processList,
   cpu,
   RAM,
   Disk,
@@ -36,9 +33,9 @@ export default function Modal({
       arrival: data.arrival,
       burst: data.burst,
       color: data.color,
-      deadline: data.deadline,
+      deadline: data.deadline == undefined ? 99 : data.deadline,
       priority: data.priority,
-      pages: data.pages,
+      pages: parseInt(data.pages),
     });
     // add na memória
     const index = RAM.addProcess(counter, parseInt(data.pages));
@@ -63,11 +60,21 @@ export default function Modal({
               <option value="purple">Roxo</option>
               <option value="pink">Rosa</option>
             </select>
-            <input {...register('arrival')} placeholder="Tempo de chegada" inputMode='numeric' defaultValue={0} />
+            <input
+              {...register('arrival')}
+              placeholder="Tempo de chegada"
+              inputMode="numeric"
+              defaultValue={0}
+            />
             <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
             <input {...register('deadline')} placeholder="Deadline" />
             <input {...register('priority')} placeholder="Prioridade" />
-            <input {...register('pages')} placeholder="Número de Páginas" />
+            <input
+              {...register('pages')}
+              placeholder="Número de Páginas"
+              defaultValue={1}
+              inputMode="numeric"
+            />
             <input type="submit" />
           </form>
           <button onClick={setOpenModal}>Fechar</button>

@@ -52,7 +52,6 @@ const tasks = [
   }),
 ];
 
-
 export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [processesStates, setProcessesStates] = useState<string[][]>([]);
@@ -65,8 +64,6 @@ export default function CpuComponent() {
   const cpu = useState<CPU>(new CPU());
   const [ram, setRam] = useState<RAM>(new RAM());
   const [disk, setDisk] = useState<Disk>(new Disk());
-
-  
 
   /*Adiciona um processo*/
   const addProcess = () => {
@@ -112,10 +109,17 @@ export default function CpuComponent() {
       setIsAuto(false);
       setReseted(false);
       setIsRunning(false);
-      setRam(new RAM());
-      setDisk(new Disk());
+      const newRam = new RAM();
+      const newDisk = new Disk();
+      saveProcesses.map((process) => {
+        console.log(typeof process.pages)
+        newRam.addProcess(process.pid, process.pages);
+        newDisk.addProcess(process.pid, ram.getPages().indexOf(process.pid));
+      });
+      setRam(newRam);
+      setDisk(newDisk);
     }
-  }, [reseted, saveProcesses, cpu, criteria]);
+  }, [reseted, saveProcesses, cpu, criteria, ram, disk]);
 
   /*Faz uma lista com os status de cada processo*/
   function updateStates() {
@@ -130,7 +134,6 @@ export default function CpuComponent() {
   useEffect(() => {
     handleExecAll();
   }, [cpu, allProcesses, processesStates, isAuto]);
-
 
   /* Executa a cpu até o fim*/
   function handleExecAll() {
@@ -174,7 +177,7 @@ export default function CpuComponent() {
               <ProcessManager processList={allProcesses} />
             </div>
           </div>
-            <StatesComponent cpu={cpu[0]} />
+          <StatesComponent cpu={cpu[0]} />
         </PMContainer>
       </div>
       <CpuView>
@@ -228,10 +231,7 @@ export default function CpuComponent() {
         </SchedulerContainer>
         {/* <div>
         </div> */}
-        <MemoryComponent
-         RAM={ram}
-         Disk={disk}
-         />
+        <MemoryComponent RAM={ram} Disk={disk} />
       </CpuView>
 
       <Modal
