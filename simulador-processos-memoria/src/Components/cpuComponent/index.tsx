@@ -226,6 +226,8 @@ export default function CpuComponent() {
 
           <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
         </SchedulerContainer>
+        {/* <div>
+        </div> */}
         <MemoryComponent
          RAM={ram}
          Disk={disk}
