@@ -37,7 +37,7 @@ export default function Modal({
       pages: data.pages,
     });
     // add na memória
-    const index = RAM.addProcess(counter, data.pages);
+    const index = RAM.addProcess(counter, parseInt(data.pages));
     Disk.addProcess(counter, index);
 
     setCounter(counter + 1);

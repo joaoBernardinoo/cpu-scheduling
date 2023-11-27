@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 
+
 import CpuComponent from '@/Components/cpuComponent';
 import MemoryComponent from '@/Components/MemoryComponent';
 import { MemoryProvider } from '@/contexts/memoryContext';
@@ -9,8 +10,8 @@ import Disk from '@/scripts/memory/Disk';
 
 export default function Home() {
   // criando memórias
-  const ram = new RAM()
-  const disk = new Disk()
+  const ram = new RAM();
+  const disk = new Disk();
 
   return (
     <MemoryProvider

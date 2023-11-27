@@ -1,7 +1,7 @@
 import Process from './process';
 import Scheduler from './scheduler';
-import React, { useContext } from 'react';
-import MemoryContext from "@/contexts/memoryContext";
+import RAM from './memory/RAM';
+import Disk from './memory/Disk';
 
 export default class CPU {
   process?: Process;
@@ -60,10 +60,11 @@ export default class CPU {
   }
 
   // Executa o processo
-  private execute() {
+  private execute(RAM: RAM, Disk: Disk) {
     this.process!.burst--;
     this.scheduler.quantumCount++;
-    const { RAM, Disk } = useContext(MemoryContext);
+
+    // add na memória
     const index = Disk.getRAMindex(this.process!.pid);
     RAM.executeProcess(index);
   }
@@ -123,7 +124,7 @@ export default class CPU {
   }
 
   // Envia o processo para a lista de processos finalizados
-  private completeProcess(allProcess: Process[]) {
+  private completeProcess(allProcess: Process[], RAM: RAM, Disk: Disk) {
     if (!(this.process && this.isFinished())) return;
 
     this.scheduler.quantumCount = 0;
@@ -134,7 +135,6 @@ export default class CPU {
     this.requestProcess();
 
     // removendo da memória 
-    const { RAM, Disk } = useContext(MemoryContext);
     RAM.removeProcess(this.process!.pid);
     Disk.removeProcess(this.process!.pid);
 
@@ -148,7 +148,7 @@ export default class CPU {
     }
   }
 
-  run(updateStates: Function, allProcess: Process[]) {
+  run(updateStates: Function, allProcess: Process[], RAM: RAM, Disk: Disk) {
     const exec = this.process ? this.process.pid : 'none';
     console.log(`Starting Process: ${exec} `);
     this.status();
@@ -181,7 +181,7 @@ export default class CPU {
       }
 
       console.log('Executing process...');
-      this.execute();
+      this.execute(RAM, Disk);
       
     }
     this.status();
@@ -189,7 +189,7 @@ export default class CPU {
     // Pega os estados dos processos
     updateStates();
     // Verifica se o processo acabou
-    this.completeProcess(allProcess);
+    this.completeProcess(allProcess, RAM, Disk);
     this.sync++;
     return;
   }

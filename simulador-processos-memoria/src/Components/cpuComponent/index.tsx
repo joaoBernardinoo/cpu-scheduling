@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import CPU from '@/scripts/cpu';
 import Process from '@/scripts/process';
@@ -7,6 +7,9 @@ import Modal from '@/Components/Modal';
 import ProcessManager from '../ProcessManager';
 import SchedulerComponent from '../SchedulerComponent';
 import StatesComponent from '../StatesComponent';
+import MemoryContext from "@/contexts/memoryContext";
+import RAM from '@/Scripts/memory/RAM';
+import Disk from '@/Scripts/memory/Disk';
 
 import { Container, PMContainer, SchedulerContainer } from './styles';
 import { calculateOverrideValues } from 'next/dist/server/font-utils';
@@ -50,6 +53,14 @@ const tasks = [
   }),
 ];
 
+function fillProcess(RAM: RAM, Disk: Disk){
+  // add na memória os processos pré-definidos
+  tasks.forEach((process) => {
+    const index = RAM.addProcess(process.pid, process.pages);
+    Disk.addProcess(process.pid, index);
+  });
+}
+
 export default function CpuComponent() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [processesStates, setProcessesStates] = useState<string[][]>([]);
@@ -60,6 +71,9 @@ export default function CpuComponent() {
   const [criteria, setCriteria] = useState<string>('FCFS');
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const cpu = useState<CPU>(new CPU());
+  const { RAM, Disk } = useContext(MemoryContext);
+  
+  // fillProcess(RAM, Disk);
 
   /*Adiciona um processo*/
   const addProcess = () => {
@@ -126,7 +140,7 @@ export default function CpuComponent() {
   function handleExecAll() {
     if (isAuto) {
       setTimeout(() => {
-        cpu[0].run(updateStates, allProcesses);
+        cpu[0].run(updateStates, allProcesses, RAM, Disk);
       }, 1000);
     }
   }
@@ -134,7 +148,7 @@ export default function CpuComponent() {
   /*Executa uma vez a cpu*/
   function handleExec() {
     setIsRunning(true);
-    cpu[0].run(updateStates, allProcesses);
+    cpu[0].run(updateStates, allProcesses, RAM, Disk);
   }
 
   /*Altera o metodo de escalonamento*/
