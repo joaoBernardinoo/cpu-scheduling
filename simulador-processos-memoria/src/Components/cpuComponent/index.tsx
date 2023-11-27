@@ -70,7 +70,9 @@ export default function CpuComponent() {
   const [criteria, setCriteria] = useState<string>('FCFS');
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const cpu = useState<CPU>(new CPU());
-  const { RAM, Disk } = useContext(MemoryContext);
+  const [ram, setRam] = useState<RAM>(new RAM());
+  const [disk, setDisk] = useState<Disk>(new Disk());
+
   
   // fillProcess(RAM, Disk);
 
