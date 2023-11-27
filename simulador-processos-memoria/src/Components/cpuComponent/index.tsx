@@ -7,7 +7,6 @@ import Modal from '@/Components/Modal';
 import ProcessManager from '../ProcessManager';
 import SchedulerComponent from '../SchedulerComponent';
 import StatesComponent from '../StatesComponent';
-import MemoryContext from "@/contexts/memoryContext";
 import RAM from '@/Scripts/memory/RAM';
 import Disk from '@/Scripts/memory/Disk';
 import MemoryComponent from '@/Components/MemoryComponent';
@@ -221,8 +220,11 @@ export default function CpuComponent() {
             </div>
           </div>
           <div className="resetButtonContainer"></div>
-        <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
-      </SchedulerContainer>
+
+          <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
+        </SchedulerContainer>
+        {/* <div>
+        </div> */}
         <MemoryComponent
          RAM={ram}
          Disk={disk}
