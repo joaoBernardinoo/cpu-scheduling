@@ -190,7 +190,7 @@ export default function CpuComponent() {
         </PMContainer>
       </div>
       <div>
-        {cpu[0].tAm}
+        {cpu[0].tAm == 0 ? "" : <h1 className="title">Tempo médio de espera: {cpu[0].tAm}</h1>}
       </div>
       <CpuView>
         <SchedulerContainer>
