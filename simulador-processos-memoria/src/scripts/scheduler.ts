@@ -41,15 +41,17 @@ export default class Scheduler {
         break;
     }
   }
-/*
-  static calculateAverageTurnaroundTime(processes: Process[]) {
+
+  calculateAverageTurnaroundTime(processes: Process[]) {
     let sum = 0;
     processes.forEach((process) => {
-      if (!process.end) return console.warn("") sum += process.end - process.arrival;
+      if (!process.end) return console.warn("")
+      sum += process.end - process.arrival;
+
     });
     return sum / processes.length;
   }
-*/
+
   // Retira o processo da fila de prontos
   // de acordo com a política de escalonamento
   fetchProcess() {
