@@ -1,7 +1,7 @@
 import RAM from '@/scripts/memory/RAM';
 import Disk from '@/scripts/memory/Disk';
 import React, { useContext } from 'react';
-import MemoryContext from '@/contexts/memoryContext';
+import { MemoryContainer } from './styles';
 
 export default function MemoryComponent() {
   // arrays da memória
@@ -20,24 +20,24 @@ export default function MemoryComponent() {
   const memoryDisk = disk.getMemory();
 
   return (
-    <div>
-      <h2>oiii eu sou a memoria rsrsrs</h2>
+    <MemoryContainer>
       {pages.map((pagina: number, index: number) => {
         return (
-          <div key={index}>
-            <p>índice: {index}</p>
-            <p>ID: {pagina}</p>
+          <div key={index} className='ramCell'>
+            <p>{index}</p>  
+            {/* add processo */}
+            <p>PID: {pagina}</p>
           </div>
         );
       })}
       {memoryDisk.map((pagina: number, index: number) => {
         return (
-          <div key={index}>
-            <p>índice: {index}</p>
-            <p>ID: {pagina}</p>
+          <div key={index} className='diskCell'>
+            <p>{index}</p>
+            <p>PID: {pagina}</p>
           </div>
         );
       })}
-    </div>
+    </MemoryContainer>
   );
 }

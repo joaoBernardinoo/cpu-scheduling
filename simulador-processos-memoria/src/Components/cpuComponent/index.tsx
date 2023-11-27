@@ -7,9 +7,8 @@ import Modal from '@/Components/Modal';
 import ProcessManager from '../ProcessManager';
 import SchedulerComponent from '../SchedulerComponent';
 import StatesComponent from '../StatesComponent';
-
-import { Container, PMContainer, SchedulerContainer } from './styles';
-import { calculateOverrideValues } from 'next/dist/server/font-utils';
+import MemoryComponent from '@/Components/MemoryComponent';
+import { Container, CpuView, PMContainer, SchedulerContainer } from './styles';
 
 const tasks = [
   new Process({
@@ -144,72 +143,76 @@ export default function CpuComponent() {
       <div className="processesContainer">
         <h1 className="title">Process Manager</h1>
         <PMContainer>
-          <div className="buttonContainer">
-            <button className="buttonPM" onClick={addProcess}>
-              Adicionar processo
-            </button>
-            <button className="buttonPM" onClick={saveProcess}>
-              Salvar Processos
-            </button>
-            <button onClick={() => setReseted(true)} className="buttonPM">
-              Resetar
-            </button>
+          <div className="processView">
+            <div className="buttonContainer">
+              <button className="buttonPM" onClick={addProcess}>
+                Adicionar processo
+              </button>
+              <button className="buttonPM" onClick={saveProcess}>
+                Salvar Processos
+              </button>
+              <button onClick={() => setReseted(true)} className="buttonPM">
+                Resetar
+              </button>
+            </div>
+            <div className="informations">
+              <ProcessManager processList={allProcesses} />
+            </div>
           </div>
-          <div className="informations">
-            <ProcessManager processList={allProcesses} />
             <StatesComponent cpu={cpu[0]} />
-          </div>
         </PMContainer>
       </div>
+      <CpuView>
+        <SchedulerContainer>
+          <div className="selectContainer">
+            <div className="radioContainer">
+              <label>
+                <input type="radio" name="criteria" value="FCFS" onChange={changeCriteria} />
+                <span>FIFO</span>
+              </label>
+            </div>
+            <div className="radioContainer">
+              <label>
+                <input type="radio" name="criteria" value="SJF" onChange={changeCriteria} />
+                <span>SJF</span>
+              </label>
+            </div>
+            <div className="radioContainer">
+              <label>
+                <input type="radio" name="criteria" value="RR" onChange={changeCriteria} />
+                <span>RR</span>
+              </label>
+            </div>
+            <div className="radioContainer">
+              <label>
+                <input type="radio" name="criteria" value="PRIORITY" onChange={changeCriteria} />
+                <span>PR</span>
+              </label>
+            </div>
+            <div className="radioContainer">
+              <label>
+                <input type="radio" name="criteria" value="EDF" onChange={changeCriteria} />
+                <span>EDF</span>
+              </label>
+            </div>
+            <div className="buttonContainer">
+              <button className="runButton" onClick={() => handleExec()}>
+                <Image src="/assets/advance.svg" alt="Executar" width={30} height={30} />
+              </button>
+              <button className="runButton" onClick={() => setIsAuto(true)}>
+                <Image src="/assets/play.svg" alt="Iniciar" width={22} height={22} />
+              </button>
+              <button className="runButton" onClick={() => setIsAuto(false)}>
+                <Image src="/assets/pause.svg" alt="Pausar" width={20} height={20} />
+              </button>
+            </div>
+          </div>
+          <div className="resetButtonContainer"></div>
 
-      <SchedulerContainer>
-        <div className="selectContainer">
-          <div className="radioContainer">
-            <label>
-              <input type="radio" name="criteria" value="FCFS" onChange={changeCriteria} />
-              <span>FIFO</span>
-            </label>
-          </div>
-          <div className="radioContainer">
-            <label>
-              <input type="radio" name="criteria" value="SJF" onChange={changeCriteria} />
-              <span>SJF</span>
-            </label>
-          </div>
-          <div className="radioContainer">
-            <label>
-              <input type="radio" name="criteria" value="RR" onChange={changeCriteria} />
-              <span>RR</span>
-            </label>
-          </div>
-          <div className="radioContainer">
-            <label>
-              <input type="radio" name="criteria" value="PRIORITY" onChange={changeCriteria} />
-              <span>PR</span>
-            </label>
-          </div>
-          <div className="radioContainer">
-            <label>
-              <input type="radio" name="criteria" value="EDF" onChange={changeCriteria} />
-              <span>EDF</span>
-            </label>
-          </div>
-          <div className="buttonContainer">
-            <button className="runButton" onClick={() => handleExec()}>
-              <Image src="/assets/advance.svg" alt="Executar" width={30} height={30} />
-            </button>
-            <button className="runButton" onClick={() => setIsAuto(true)}>
-              <Image src="/assets/play.svg" alt="Iniciar" width={22} height={22} />
-            </button>
-            <button className="runButton" onClick={() => setIsAuto(false)}>
-              <Image src="/assets/pause.svg" alt="Pausar" width={20} height={20} />
-            </button>
-          </div>
-        </div>
-        <div className="resetButtonContainer"></div>
-
-        <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
-      </SchedulerContainer>
+          <SchedulerComponent listStatus={processesStates} listProcess={allProcesses} />
+        </SchedulerContainer>
+        <MemoryComponent />
+      </CpuView>
 
       <Modal
         isOpen={modalIsOpen}

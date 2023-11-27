@@ -2,9 +2,8 @@ import Head from 'next/head';
 import React from 'react';
 
 import CpuComponent from '@/Components/cpuComponent';
-import MemoryComponent from '@/Components/MemoryComponent';
 import { MemoryProvider } from '@/contexts/memoryContext';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 
 export default function Home() {
@@ -31,7 +30,7 @@ export default function Home() {
       </Head>
       <main>
         <CpuComponent />
-        <MemoryComponent />
+        
       </main>
     </div>
     </MemoryProvider>
