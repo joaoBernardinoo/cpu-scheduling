@@ -1,12 +1,16 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Image from 'next/image';
+
 
 import Process from '@/scripts/process';
 import CPU from '@/scripts/cpu';
 
+
 import { Background, Container } from './styles';
+import RAM from '@/Scripts/memory/RAM';
+import Disk from '@/Scripts/memory/Disk';
 
 
 
@@ -14,12 +18,16 @@ export default function Modal({
   isOpen,
   setOpenModal,
   processList, 
-  cpu
+  cpu,
+  RAM,
+  Disk,
 }: {
   isOpen: boolean;
   setOpenModal: () => void;
   processList: Process[];
   cpu: CPU;
+  RAM: RAM;
+  Disk: Disk;
 }) {
   const { register, handleSubmit } = useForm();
   const [counter, setCounter] = useState<number>(501);
@@ -32,7 +40,12 @@ export default function Modal({
       color: data.color,
       deadline: data.deadline,
       priority: data.priority,
+      pages: data.pages,
     });
+    // add na memória
+    const index = RAM.addProcess(counter, parseInt(data.pages));
+    Disk.addProcess(counter, index);
+
     setCounter(counter + 1);
     processList.push(newProcess);
     cpu.addProcess(newProcess);
@@ -58,10 +71,11 @@ export default function Modal({
               <option value="purple">Roxo</option>
               <option value="pink">Rosa</option>
             </select>
-            <input {...register('arrival')} placeholder="Tempo de chegada" defaultValue={0} />
+            <input {...register('arrival')} placeholder="Tempo de chegada" inputMode='numeric' defaultValue={0} />
             <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
             <input {...register('deadline')} placeholder="Deadline" />
             <input {...register('priority')} placeholder="Prioridade" />
+            <input {...register('pages')} placeholder="Número de Páginas" />
             <input type="submit" />
           </form>
           

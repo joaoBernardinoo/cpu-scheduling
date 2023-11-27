@@ -19,3 +19,5 @@ export const GlobalStyles = styled.createGlobalStyle`
         text-decoration: none;
     }
 `
+
+// export const Main {}

@@ -24,7 +24,6 @@ class RAM {
     return this.pages;
   }
 
-
   getEmptyPages(){
     return this.emptyPages;
   }
@@ -37,14 +36,14 @@ class RAM {
     return this.LRUCounter;
   }
 
+
   // função que simula a requisição/acesso de um processo na memoria
   // o valor do tempo de LRU desse processo deve ser zerado
-  getProcessId(index: number){
+  executeProcess(index: number){
     const processId = this.pages[index];
     if (processId != undefined){
       this.updateLRU();
       this.LRUCounter[processId] = 0;
-      return processId;
     }
     console.log("processo não está na RAM!");
   }
@@ -80,6 +79,8 @@ class RAM {
     else{
       this.handlePageFault(processId, numberPages);
     }
+
+    return index;
   }
 
   

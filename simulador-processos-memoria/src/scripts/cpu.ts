@@ -1,5 +1,7 @@
 import Process from './process';
 import Scheduler from './scheduler';
+import RAM from './memory/RAM';
+import Disk from './memory/Disk';
 
 export default class CPU {
   process?: Process;
@@ -58,9 +60,13 @@ export default class CPU {
   }
 
   // Executa o processo
-  private execute() {
+  private execute(RAM: RAM, Disk: Disk) {
     this.process!.burst--;
     this.scheduler.quantumCount++;
+
+    // add na memória
+    const index = Disk.getRAMindex(this.process!.pid);
+    RAM.executeProcess(index);
   }
 
   // Verifica se o processo acabou
@@ -118,7 +124,7 @@ export default class CPU {
   }
 
   // Envia o processo para a lista de processos finalizados
-  private completeProcess(allProcess: Process[]) {
+  private completeProcess(allProcess: Process[], RAM: RAM, Disk: Disk) {
     if (!(this.process && this.isFinished())) return;
 
     this.scheduler.quantumCount = 0;
@@ -127,6 +133,10 @@ export default class CPU {
     this.scheduler.finished.push(this.process!);
     this.process.end = this.sync + 1;
     this.requestProcess();
+
+    // removendo da memória 
+    RAM.removeProcess(this.process!.pid);
+    Disk.removeProcess(this.process!.pid);
 
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
@@ -139,7 +149,7 @@ export default class CPU {
     }
   }
 
-  run(updateStates: Function, allProcess: Process[]) {
+  run(updateStates: Function, allProcess: Process[], RAM: RAM, Disk: Disk) {
     const exec = this.process ? this.process.pid : 'none';
     console.log(`Starting Process: ${exec} `);
     this.status();
@@ -172,14 +182,15 @@ export default class CPU {
       }
 
       console.log('Executing process...');
-      this.execute();
+      this.execute(RAM, Disk);
+      
     }
     this.status();
 
     // Pega os estados dos processos
     updateStates();
     // Verifica se o processo acabou
-    this.completeProcess(allProcess);
+    this.completeProcess(allProcess, RAM, Disk);
     this.sync++;
     return;
   }

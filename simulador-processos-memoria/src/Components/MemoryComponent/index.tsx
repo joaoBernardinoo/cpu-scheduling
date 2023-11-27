@@ -1,43 +1,33 @@
 import RAM from '@/scripts/memory/RAM';
 import Disk from '@/scripts/memory/Disk';
-import React, { useContext } from 'react';
-import MemoryContext from '@/contexts/memoryContext';
+import React, { useContext, useEffect, useState } from 'react';
+import { MemoryContainer } from './styles';
 
-export default function MemoryComponent() {
+export default function MemoryComponent({RAM, Disk}: {RAM: RAM, Disk: Disk}) {
   // arrays da memória
   // const { RAM, Disk } = useContext(MemoryContext);
 
-  const ram = new RAM();
-  ram.addProcess(2, 6);
-  ram.addProcess(3, 6);
-  ram.addProcess(5, 6);
-  const pages = ram.getPages();
-
-  const disk = new Disk();
-  disk.addProcess(2, 0);
-  disk.addProcess(3, 7);
-  disk.addProcess(2, 12);
-  const memoryDisk = disk.getMemory();
+  
 
   return (
-    <div>
-      <h2>oiii eu sou a memoria rsrsrs</h2>
-      {pages.map((pagina: number, index: number) => {
+    <MemoryContainer>
+      {RAM.getPages().map((pagina: number, index: number) => {
         return (
-          <div key={index}>
-            <p>índice: {index}</p>
-            <p>ID: {pagina}</p>
+          <div key={index} className='ramCell'>
+            <p>{index}</p>  
+            {/* add processo */}
+            <p>PID: {pagina}</p>
           </div>
         );
       })}
-      {memoryDisk.map((pagina: number, index: number) => {
+      {Disk.getMemory().map((pagina: number, index: number) => {
         return (
-          <div key={index}>
-            <p>índice: {index}</p>
-            <p>ID: {pagina}</p>
+          <div key={index} className='diskCell'>
+            <p>{index}</p>
+            <p>PID: {pagina}</p>
           </div>
         );
       })}
-    </div>
+    </MemoryContainer>
   );
 }
