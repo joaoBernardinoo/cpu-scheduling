@@ -59,7 +59,7 @@ export default function Modal({
               <option value="purple">Roxo</option>
               <option value="pink">Rosa</option>
             </select>
-            <input {...register('arrival')} placeholder="Tempo de chegada" defaultValue={0} />
+            <input {...register('arrival')} placeholder="Tempo de chegada" inputMode='numeric' defaultValue={0} />
             <input {...register('burst')} placeholder="Tempo de execução" defaultValue={2} />
             <input {...register('deadline')} placeholder="Deadline" />
             <input {...register('priority')} placeholder="Prioridade" />

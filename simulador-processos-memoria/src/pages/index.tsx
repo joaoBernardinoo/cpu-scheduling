@@ -3,7 +3,6 @@ import React from 'react';
 
 
 import CpuComponent from '@/Components/cpuComponent';
-import MemoryComponent from '@/Components/MemoryComponent';
 import { MemoryProvider } from '@/contexts/memoryContext';
 import RAM from '@/scripts/memory/RAM';
 import Disk from '@/scripts/memory/Disk';
@@ -26,7 +25,7 @@ export default function Home() {
       </Head>
       <main>
         <CpuComponent />
-        <MemoryComponent />
+        
       </main>
     </div>
     </MemoryProvider>

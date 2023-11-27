@@ -131,7 +131,7 @@ export default class CPU {
     console.log('Process finished!');
     this.process.status = 'finished';
     this.scheduler.finished.push(this.process!);
-    this.process.end = this.sync;
+    this.process.end = this.sync + 1;
     this.requestProcess();
 
     // removendo da memória 
@@ -140,6 +140,7 @@ export default class CPU {
 
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
+    console.log(allProcess.length, this.scheduler.finished.length);
     if (allProcess.length == this.scheduler.finished.length) {
       let averageTurnAround = this.scheduler.calculateAverageTurnaroundTime(
         this.scheduler.finished

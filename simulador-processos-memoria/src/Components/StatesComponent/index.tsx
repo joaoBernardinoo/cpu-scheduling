@@ -21,14 +21,14 @@ export default function StatesComponent ({cpu}: {cpu: CPU}){
                     ))}
             </List>
         </Section>
-        <Section>        
-            <h4>Em espera</h4>
-            <List>
-                {cpu.scheduler.suspended.map((process, i) => (
-                    <ColorComponent color={process.color} key={i}></ColorComponent>
-                    ))}
-            </List>
-        </Section>
+        {/* <Section>         */}
+            {/* <h4>Em espera</h4> */}
+            {/* <List> */}
+                {/* {cpu.scheduler.suspended.map((process, i) => ( */}
+                    {/* <ColorComponent color={process.color} key={i}></ColorComponent> */}
+                    {/* ))} */}
+            {/* </List> */}
+        {/* </Section> */}
     </Container>
     )
 }

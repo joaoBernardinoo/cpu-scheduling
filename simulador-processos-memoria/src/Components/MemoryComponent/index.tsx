@@ -1,42 +1,43 @@
 import RAM from '@/scripts/memory/RAM';
 import Disk from '@/scripts/memory/Disk';
 import React, { useContext, useEffect, useState } from 'react';
-import MemoryContext from '@/contexts/memoryContext';
+import { MemoryContainer } from './styles';
 
-export default function MemoryComponent(){
-    //  memória
-    const { RAM, Disk } = useContext(MemoryContext);
-    const [memoryRAM, setMemoryRAM] = useState<number[]>([]);
-    const [memoryDisk, setMemoryDisk] = useState<number[]>([]);
+export default function MemoryComponent() {
+  // arrays da memória
+  // const { RAM, Disk } = useContext(MemoryContext);
 
-    // useEffect(() => {
-    //     setMemoryRAM(RAM.getPages());
-    //     setMemoryDisk(Disk.getMemory());
-    //     console.log(RAM.getPages());
-    // }, [])
+  const ram = new RAM();
+  ram.addProcess(2, 6);
+  ram.addProcess(3, 6);
+  ram.addProcess(5, 6);
+  const pages = ram.getPages();
 
-    
-    return(
-        <div>
-            <h2>oiii eu sou a memoria rsrsrs</h2>
-            {RAM.getPages().map((pagina: number, index: number) => {
-                    return(
-                        <div key={index}>
-                            <p>índice: {index}</p>
-                            <p>ID: {pagina}</p>
-                        </div>
-                    )
-                })   
-            }
-            {Disk.getMemory().map((pagina: number, index: number) => {
-                return(
-                    <div key={index}>
-                        <p>índice: {index}</p>
-                        <p>ID: {pagina}</p>
-                    </div>
-                )
-            })
-            }
-        </div>
-    )
+  const disk = new Disk();
+  disk.addProcess(2, 0);
+  disk.addProcess(3, 7);
+  disk.addProcess(2, 12);
+  const memoryDisk = disk.getMemory();
+
+  return (
+    <MemoryContainer>
+      {pages.map((pagina: number, index: number) => {
+        return (
+          <div key={index} className='ramCell'>
+            <p>{index}</p>  
+            {/* add processo */}
+            <p>PID: {pagina}</p>
+          </div>
+        );
+      })}
+      {memoryDisk.map((pagina: number, index: number) => {
+        return (
+          <div key={index} className='diskCell'>
+            <p>{index}</p>
+            <p>PID: {pagina}</p>
+          </div>
+        );
+      })}
+    </MemoryContainer>
+  );
 }
