@@ -63,7 +63,7 @@ export default class CPU {
   private execute(RAM: RAM, Disk: Disk) {
     this.process!.burst--;
     this.scheduler.quantumCount++;
-    
+
     // add na memória
     const index = Disk.getRAMindex(this.process!.pid);
     RAM.executeProcess(index);
@@ -132,11 +132,11 @@ export default class CPU {
     this.process.status = 'finished';
     this.scheduler.finished.push(this.process!);
     this.process.end = this.sync + 1;
-    this.requestProcess();
-
-    // removendo da memória 
+    // removendo da memória
     RAM.removeProcess(this.process!.pid);
     Disk.removeProcess(this.process!.pid);
+
+    this.requestProcess();
 
     // Aqui falta calcular o Turn Around do Processo
     // Basta subtrair o tempo de chegada do tempo de final de execução ( representado por cpu.sync )
@@ -183,7 +183,6 @@ export default class CPU {
 
       console.log('Executing process...');
       this.execute(RAM, Disk);
-      
     }
     this.status();
 

@@ -7,8 +7,8 @@ import CPU from '@/scripts/cpu';
 
 
 import { Background, Container } from './styles';
-import RAM from '@/Scripts/memory/RAM';
-import Disk from '@/Scripts/memory/Disk';
+import RAM from '@/scripts/memory/RAM';
+import Disk from '@/scripts/memory/Disk';
 
 
 
