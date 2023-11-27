@@ -1,2 +1,7 @@
-# cpu-scheduling
-This repository hosts an implementation of various CPU scheduling algorithms, vital components in operating systems responsible for managing processes efficiently. Explore different algorithms such as First Come First Serve (FCFS), Shortest Job Next (SJN), Round Robin, Priority Scheduling
+# 📈 Escalonador de Processos e Gerenciador de Memória
+Esse código implementa uma visualização de escalonamento de processos e um gráfico de uso da RAM e do Disco.
+
+## 👬Integrantes do grupo:
+* Caio Hebert Souza Viana
+* Ícaro Albuquerque Baliza Fernandes
+* João Paulo Gomes Bernardino 
